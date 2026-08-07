@@ -1,6 +1,6 @@
 # Configurable Board Game MVP
 
-A small server-authoritative, event-sourced tabletop prototype. The public repository contains an original generic demo called **Frontier Council**; setting-specific names, maps, players, labels, palettes, and cards live in replaceable data bundles.
+A small server-authoritative, event-sourced tabletop prototype. The repository ships with **Ērān**, an original magical-antiquity example bundle; setting-specific names, maps, players, labels, palettes, and cards live in replaceable data bundles.
 
 ## Stack
 
@@ -10,7 +10,7 @@ A small server-authoritative, event-sourced tabletop prototype. The public repos
 - `apps/web`: React + Vite board UI
 - Vitest tests
 
-## Run the public bundle
+## Run the default bundle
 
 ```sh
 pnpm install
@@ -27,7 +27,7 @@ A bundle is one ordinary directory with three human-editable JSON files:
 ```text
 my-bundle/
 ├── manifest.json   # title, UI labels, tracks, limits, test fixture
-├── players.json   # player names, colors, card palettes, units, cards
+├── players.json    # player names, colors, card palettes, units, cards
 └── map.json        # terrains, regions, hex grid, optional explicit edges
 ```
 
