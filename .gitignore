@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+*.zip
+
+# Never stage local/private setting content or compiled copies of it.
+bundles/private/
+packages/rules/src/generated/bundle.ts

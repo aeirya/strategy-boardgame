@@ -1,0 +1,20 @@
+{
+  "name": "strategy-boardgame",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "bundle:compile": "node scripts/compile-bundle.mjs",
+    "build": "node scripts/compile-bundle.mjs && pnpm -r build",
+    "dev": "node scripts/compile-bundle.mjs && pnpm --filter @tabletop/rules --filter @tabletop/server build && pnpm --parallel --filter @tabletop/server --filter @tabletop/web dev",
+    "test": "node scripts/compile-bundle.mjs && pnpm -r test",
+    "typecheck": "node scripts/compile-bundle.mjs && pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.14",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "license": "GPL-3.0-only"
+}

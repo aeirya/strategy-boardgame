@@ -1,0 +1,470 @@
+[
+  {
+    "id": "adur",
+    "name": "Ādur",
+    "emblem": "Ā",
+    "description": "Fire and sacred flame",
+    "color": "#7d9bb3",
+    "startingUnits": [
+      {
+        "area": "adurGate",
+        "units": [
+          "infantry",
+          "cavalry"
+        ]
+      },
+      {
+        "area": "westernSea",
+        "units": [
+          "fleet"
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "id": "adur-vanguard",
+        "name": "Vanguard",
+        "strength": 4,
+        "symbol": "▲",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "adur-warden",
+        "name": "Warden",
+        "strength": 3,
+        "symbol": "◆",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "adur-scout",
+        "name": "Scout",
+        "strength": 2,
+        "symbol": "◇",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "adur-envoy",
+        "name": "Envoy",
+        "strength": 2,
+        "symbol": "●",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "adur-guard",
+        "name": "Guard",
+        "strength": 1,
+        "symbol": "■",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "adur-rider",
+        "name": "Rider",
+        "strength": 1,
+        "symbol": "▶",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "adur-seer",
+        "name": "Seer",
+        "strength": 0,
+        "symbol": "✦",
+        "text": "No ability in the MVP."
+      }
+    ],
+    "cardStyle": {
+      "background": "#182126",
+      "foreground": "#f4ead4",
+      "accent": "#7d9bb3"
+    }
+  },
+  {
+    "id": "mihr",
+    "name": "Mihr",
+    "emblem": "M",
+    "description": "Covenant, oath, and radiant authority",
+    "color": "#b55a45",
+    "startingUnits": [
+      {
+        "area": "mihrCourt",
+        "units": [
+          "infantry",
+          "cavalry"
+        ]
+      },
+      {
+        "area": "northernSea",
+        "units": [
+          "fleet"
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "id": "mihr-vanguard",
+        "name": "Vanguard",
+        "strength": 4,
+        "symbol": "▲",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "mihr-warden",
+        "name": "Warden",
+        "strength": 3,
+        "symbol": "◆",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "mihr-scout",
+        "name": "Scout",
+        "strength": 2,
+        "symbol": "◇",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "mihr-envoy",
+        "name": "Envoy",
+        "strength": 2,
+        "symbol": "●",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "mihr-guard",
+        "name": "Guard",
+        "strength": 1,
+        "symbol": "■",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "mihr-rider",
+        "name": "Rider",
+        "strength": 1,
+        "symbol": "▶",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "mihr-seer",
+        "name": "Seer",
+        "strength": 0,
+        "symbol": "✦",
+        "text": "No ability in the MVP."
+      }
+    ],
+    "cardStyle": {
+      "background": "#182126",
+      "foreground": "#f4ead4",
+      "accent": "#b55a45"
+    }
+  },
+  {
+    "id": "wahram",
+    "name": "Wahrām",
+    "emblem": "W",
+    "description": "Victory and the warrior spirit",
+    "color": "#3f8191",
+    "startingUnits": [
+      {
+        "area": "wahramHold",
+        "units": [
+          "infantry",
+          "cavalry"
+        ]
+      },
+      {
+        "area": "easternSea",
+        "units": [
+          "fleet"
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "id": "wahram-vanguard",
+        "name": "Vanguard",
+        "strength": 4,
+        "symbol": "▲",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "wahram-warden",
+        "name": "Warden",
+        "strength": 3,
+        "symbol": "◆",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "wahram-scout",
+        "name": "Scout",
+        "strength": 2,
+        "symbol": "◇",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "wahram-envoy",
+        "name": "Envoy",
+        "strength": 2,
+        "symbol": "●",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "wahram-guard",
+        "name": "Guard",
+        "strength": 1,
+        "symbol": "■",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "wahram-rider",
+        "name": "Rider",
+        "strength": 1,
+        "symbol": "▶",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "wahram-seer",
+        "name": "Seer",
+        "strength": 0,
+        "symbol": "✦",
+        "text": "No ability in the MVP."
+      }
+    ],
+    "cardStyle": {
+      "background": "#182126",
+      "foreground": "#f4ead4",
+      "accent": "#3f8191"
+    }
+  },
+  {
+    "id": "anahid",
+    "name": "Anāhīd",
+    "emblem": "A",
+    "description": "Waters, fertility, and celestial purity",
+    "color": "#4e8b5e",
+    "startingUnits": [
+      {
+        "area": "anahidGarden",
+        "units": [
+          "infantry",
+          "cavalry"
+        ]
+      },
+      {
+        "area": "southeastSea",
+        "units": [
+          "fleet"
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "id": "anahid-vanguard",
+        "name": "Vanguard",
+        "strength": 4,
+        "symbol": "▲",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "anahid-warden",
+        "name": "Warden",
+        "strength": 3,
+        "symbol": "◆",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "anahid-scout",
+        "name": "Scout",
+        "strength": 2,
+        "symbol": "◇",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "anahid-envoy",
+        "name": "Envoy",
+        "strength": 2,
+        "symbol": "●",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "anahid-guard",
+        "name": "Guard",
+        "strength": 1,
+        "symbol": "■",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "anahid-rider",
+        "name": "Rider",
+        "strength": 1,
+        "symbol": "▶",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "anahid-seer",
+        "name": "Seer",
+        "strength": 0,
+        "symbol": "✦",
+        "text": "No ability in the MVP."
+      }
+    ],
+    "cardStyle": {
+      "background": "#182126",
+      "foreground": "#f4ead4",
+      "accent": "#4e8b5e"
+    }
+  },
+  {
+    "id": "xwarrah",
+    "name": "Xwarrah",
+    "emblem": "X",
+    "description": "Royal glory, fortune, and legitimate rule",
+    "color": "#8b7a67",
+    "startingUnits": [
+      {
+        "area": "xwarrahSeat",
+        "units": [
+          "infantry",
+          "cavalry"
+        ]
+      },
+      {
+        "area": "southernSea",
+        "units": [
+          "fleet"
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "id": "xwarrah-vanguard",
+        "name": "Vanguard",
+        "strength": 4,
+        "symbol": "▲",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "xwarrah-warden",
+        "name": "Warden",
+        "strength": 3,
+        "symbol": "◆",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "xwarrah-scout",
+        "name": "Scout",
+        "strength": 2,
+        "symbol": "◇",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "xwarrah-envoy",
+        "name": "Envoy",
+        "strength": 2,
+        "symbol": "●",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "xwarrah-guard",
+        "name": "Guard",
+        "strength": 1,
+        "symbol": "■",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "xwarrah-rider",
+        "name": "Rider",
+        "strength": 1,
+        "symbol": "▶",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "xwarrah-seer",
+        "name": "Seer",
+        "strength": 0,
+        "symbol": "✦",
+        "text": "No ability in the MVP."
+      }
+    ],
+    "cardStyle": {
+      "background": "#182126",
+      "foreground": "#f4ead4",
+      "accent": "#8b7a67"
+    }
+  },
+  {
+    "id": "tishtar",
+    "name": "Tištar",
+    "emblem": "T",
+    "description": "Sirius, rain, and the eastern sky",
+    "color": "#765f91",
+    "startingUnits": [
+      {
+        "area": "tishtarTower",
+        "units": [
+          "infantry",
+          "cavalry"
+        ]
+      },
+      {
+        "area": "southwestSea",
+        "units": [
+          "fleet"
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "id": "tishtar-vanguard",
+        "name": "Vanguard",
+        "strength": 4,
+        "symbol": "▲",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "tishtar-warden",
+        "name": "Warden",
+        "strength": 3,
+        "symbol": "◆",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "tishtar-scout",
+        "name": "Scout",
+        "strength": 2,
+        "symbol": "◇",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "tishtar-envoy",
+        "name": "Envoy",
+        "strength": 2,
+        "symbol": "●",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "tishtar-guard",
+        "name": "Guard",
+        "strength": 1,
+        "symbol": "■",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "tishtar-rider",
+        "name": "Rider",
+        "strength": 1,
+        "symbol": "▶",
+        "text": "No ability in the MVP."
+      },
+      {
+        "id": "tishtar-seer",
+        "name": "Seer",
+        "strength": 0,
+        "symbol": "✦",
+        "text": "No ability in the MVP."
+      }
+    ],
+    "cardStyle": {
+      "background": "#182126",
+      "foreground": "#f4ead4",
+      "accent": "#765f91"
+    }
+  }
+]

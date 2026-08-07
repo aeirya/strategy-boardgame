@@ -1,0 +1,461 @@
+{
+  "visual": {
+    "hexRadius": 42,
+    "origin": [
+      58,
+      66
+    ],
+    "editorRows": 12,
+    "viewBox": "0 0 1200 1040",
+    "width": 1200,
+    "height": 1040
+  },
+  "terrains": [
+    {
+      "id": "mountain",
+      "color": "#8fa3ad",
+      "texture": "snow",
+      "areaType": "land"
+    },
+    {
+      "id": "sunlands",
+      "color": "#a36f56",
+      "texture": "rock",
+      "areaType": "land"
+    },
+    {
+      "id": "riverlands",
+      "color": "#5f8b81",
+      "texture": "grass",
+      "areaType": "land"
+    },
+    {
+      "id": "gardens",
+      "color": "#56765a",
+      "texture": "grass",
+      "areaType": "land"
+    },
+    {
+      "id": "plateau",
+      "color": "#817567",
+      "texture": "rock",
+      "areaType": "land"
+    },
+    {
+      "id": "steppe",
+      "color": "#716782",
+      "texture": "field",
+      "areaType": "land"
+    },
+    {
+      "id": "crossroads",
+      "color": "#8b846b",
+      "texture": "field",
+      "areaType": "land"
+    },
+    {
+      "id": "sea",
+      "color": "#326d80",
+      "texture": "wave",
+      "areaType": "sea"
+    }
+  ],
+  "areas": [
+    {
+      "id": "westernSea",
+      "name": "Western Sea",
+      "shortName": "Western",
+      "type": "sea",
+      "objective": 0,
+      "resourceSites": 0,
+      "capacity": 0,
+      "terrain": "sea"
+    },
+    {
+      "id": "adurGate",
+      "name": "Gate of Ādur",
+      "shortName": "Ādur Gate",
+      "type": "land",
+      "objective": 2,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "mountain"
+    },
+    {
+      "id": "whitePass",
+      "name": "White Pass",
+      "shortName": "White Pass",
+      "type": "land",
+      "objective": 1,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "mountain"
+    },
+    {
+      "id": "northernSea",
+      "name": "Northern Sea",
+      "shortName": "Northern",
+      "type": "sea",
+      "objective": 0,
+      "resourceSites": 0,
+      "capacity": 0,
+      "terrain": "sea"
+    },
+    {
+      "id": "mihrCourt",
+      "name": "Court of Mihr",
+      "shortName": "Mihr Court",
+      "type": "land",
+      "objective": 2,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "sunlands"
+    },
+    {
+      "id": "covenantFields",
+      "name": "Covenant Fields",
+      "shortName": "Covenant",
+      "type": "land",
+      "objective": 1,
+      "resourceSites": 1,
+      "capacity": 0,
+      "terrain": "sunlands"
+    },
+    {
+      "id": "easternSea",
+      "name": "Eastern Sea",
+      "shortName": "Eastern",
+      "type": "sea",
+      "objective": 0,
+      "resourceSites": 0,
+      "capacity": 0,
+      "terrain": "sea"
+    },
+    {
+      "id": "wahramHold",
+      "name": "Hold of Wahrām",
+      "shortName": "Wahrām Hold",
+      "type": "land",
+      "objective": 2,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "riverlands"
+    },
+    {
+      "id": "redRoad",
+      "name": "Red Road",
+      "shortName": "Red Road",
+      "type": "land",
+      "objective": 1,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "riverlands"
+    },
+    {
+      "id": "southeastSea",
+      "name": "Southeastern Sea",
+      "shortName": "Southeastern",
+      "type": "sea",
+      "objective": 0,
+      "resourceSites": 0,
+      "capacity": 0,
+      "terrain": "sea"
+    },
+    {
+      "id": "anahidGarden",
+      "name": "Gardens of Anāhīd",
+      "shortName": "Anāhīd Gardens",
+      "type": "land",
+      "objective": 2,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "gardens"
+    },
+    {
+      "id": "riverGardens",
+      "name": "River Gardens",
+      "shortName": "River Gardens",
+      "type": "land",
+      "objective": 1,
+      "resourceSites": 1,
+      "capacity": 0,
+      "terrain": "gardens"
+    },
+    {
+      "id": "southernSea",
+      "name": "Southern Sea",
+      "shortName": "Southern",
+      "type": "sea",
+      "objective": 0,
+      "resourceSites": 0,
+      "capacity": 0,
+      "terrain": "sea"
+    },
+    {
+      "id": "xwarrahSeat",
+      "name": "Seat of Xwarrah",
+      "shortName": "Xwarrah Seat",
+      "type": "land",
+      "objective": 2,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "plateau"
+    },
+    {
+      "id": "royalPlateau",
+      "name": "Royal Plateau",
+      "shortName": "Royal Plateau",
+      "type": "land",
+      "objective": 1,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "plateau"
+    },
+    {
+      "id": "southwestSea",
+      "name": "Southwestern Sea",
+      "shortName": "Southwestern",
+      "type": "sea",
+      "objective": 0,
+      "resourceSites": 0,
+      "capacity": 0,
+      "terrain": "sea"
+    },
+    {
+      "id": "tishtarTower",
+      "name": "Tower of Tištar",
+      "shortName": "Tištar Tower",
+      "type": "land",
+      "objective": 2,
+      "resourceSites": 1,
+      "capacity": 1,
+      "terrain": "steppe"
+    },
+    {
+      "id": "starSteppe",
+      "name": "Star Steppe",
+      "shortName": "Star Steppe",
+      "type": "land",
+      "objective": 1,
+      "resourceSites": 1,
+      "capacity": 0,
+      "terrain": "steppe"
+    },
+    {
+      "id": "crossroads",
+      "name": "The Crossroads",
+      "shortName": "Crossroads",
+      "type": "land",
+      "objective": 2,
+      "resourceSites": 2,
+      "capacity": 1,
+      "terrain": "crossroads"
+    }
+  ],
+  "grid": [
+    [
+      "westernSea",
+      "westernSea",
+      "adurGate",
+      "adurGate",
+      "adurGate",
+      "northernSea",
+      "northernSea",
+      "northernSea",
+      "northernSea",
+      "northernSea",
+      "wahramHold",
+      "wahramHold",
+      "wahramHold",
+      "easternSea",
+      "easternSea"
+    ],
+    [
+      "westernSea",
+      "adurGate",
+      "adurGate",
+      "adurGate",
+      "whitePass",
+      "northernSea",
+      "northernSea",
+      "northernSea",
+      "northernSea",
+      "redRoad",
+      "wahramHold",
+      "wahramHold",
+      "wahramHold",
+      "easternSea",
+      "easternSea"
+    ],
+    [
+      "westernSea",
+      "adurGate",
+      "adurGate",
+      "adurGate",
+      "whitePass",
+      "whitePass",
+      "mihrCourt",
+      "mihrCourt",
+      "mihrCourt",
+      "redRoad",
+      "redRoad",
+      "wahramHold",
+      "wahramHold",
+      "wahramHold",
+      "easternSea"
+    ],
+    [
+      "adurGate",
+      "adurGate",
+      "adurGate",
+      "whitePass",
+      "whitePass",
+      "whitePass",
+      "covenantFields",
+      "covenantFields",
+      "covenantFields",
+      "redRoad",
+      "redRoad",
+      "wahramHold",
+      "wahramHold",
+      "wahramHold",
+      "easternSea"
+    ],
+    [
+      "adurGate",
+      "adurGate",
+      "adurGate",
+      "whitePass",
+      "whitePass",
+      "whitePass",
+      "covenantFields",
+      "covenantFields",
+      "covenantFields",
+      "redRoad",
+      "redRoad",
+      "redRoad",
+      "wahramHold",
+      "wahramHold",
+      "wahramHold"
+    ],
+    [
+      "adurGate",
+      "adurGate",
+      "whitePass",
+      "whitePass",
+      "whitePass",
+      "crossroads",
+      "crossroads",
+      "crossroads",
+      "crossroads",
+      "redRoad",
+      "redRoad",
+      "redRoad",
+      "wahramHold",
+      "wahramHold",
+      "wahramHold"
+    ],
+    [
+      "tishtarTower",
+      "tishtarTower",
+      "tishtarTower",
+      "starSteppe",
+      "starSteppe",
+      "starSteppe",
+      "crossroads",
+      "crossroads",
+      "royalPlateau",
+      "riverGardens",
+      "riverGardens",
+      "riverGardens",
+      "riverGardens",
+      "anahidGarden",
+      "anahidGarden"
+    ],
+    [
+      "tishtarTower",
+      "tishtarTower",
+      "tishtarTower",
+      "starSteppe",
+      "starSteppe",
+      "starSteppe",
+      "crossroads",
+      "royalPlateau",
+      "royalPlateau",
+      "riverGardens",
+      "riverGardens",
+      "riverGardens",
+      "anahidGarden",
+      "anahidGarden",
+      "anahidGarden"
+    ],
+    [
+      "southwestSea",
+      "tishtarTower",
+      "tishtarTower",
+      "tishtarTower",
+      "starSteppe",
+      "starSteppe",
+      "xwarrahSeat",
+      "xwarrahSeat",
+      "xwarrahSeat",
+      "riverGardens",
+      "riverGardens",
+      "riverGardens",
+      "anahidGarden",
+      "anahidGarden",
+      "anahidGarden"
+    ],
+    [
+      "southwestSea",
+      "tishtarTower",
+      "tishtarTower",
+      "tishtarTower",
+      "starSteppe",
+      "starSteppe",
+      "xwarrahSeat",
+      "xwarrahSeat",
+      "xwarrahSeat",
+      "riverGardens",
+      "riverGardens",
+      "anahidGarden",
+      "anahidGarden",
+      "anahidGarden",
+      "southeastSea"
+    ],
+    [
+      "southwestSea",
+      "southwestSea",
+      "tishtarTower",
+      "tishtarTower",
+      "tishtarTower",
+      "starSteppe",
+      "southernSea",
+      "southernSea",
+      "southernSea",
+      "southernSea",
+      "riverGardens",
+      "anahidGarden",
+      "anahidGarden",
+      "anahidGarden",
+      "southeastSea"
+    ],
+    [
+      "southwestSea",
+      "southwestSea",
+      "tishtarTower",
+      "tishtarTower",
+      "tishtarTower",
+      "southernSea",
+      "southernSea",
+      "southernSea",
+      "southernSea",
+      "southernSea",
+      "anahidGarden",
+      "anahidGarden",
+      "anahidGarden",
+      "southeastSea",
+      "southeastSea"
+    ]
+  ]
+}

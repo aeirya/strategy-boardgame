@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "eran",
+  "name": "Ērān",
+  "description": "An original magical-antiquity example bundle built around six rival powers and a fictionalized Iranian-inspired setting.",
+  "ui": {
+    "title": "Ērān",
+    "eyebrow": "Magical antiquity strategy demo",
+    "subtitle": "Six powers compete across an original hex map while omens, war, and xwarrah shape the age.",
+    "playerLabel": "Faction",
+    "playerPlural": "Factions",
+    "combatCardLabel": "War card",
+    "combatCardPlural": "War cards",
+    "threatLabel": "Daeva unrest",
+    "boardAriaLabel": "Ērān campaign map",
+    "tracks": {
+      "turnOrder": "Precedence",
+      "combatOrder": "War precedence",
+      "specialOrderOrder": "Command precedence"
+    },
+    "logLabel": "Chronicle",
+    "features": {
+      "majorObjective": "Royal citadel",
+      "objective": "Citadel",
+      "resource": "Xwarrah",
+      "capacity": "Provision"
+    }
+  },
+  "rules": {
+    "minPlayers": 3,
+    "maxPlayers": 6,
+    "initialResource": 5,
+    "initialCapacity": 2,
+    "initialThreat": 2,
+    "scoreTarget": 5,
+    "maxRounds": 10
+  },
+  "testScenario": {
+    "attackerFrom": "whitePass",
+    "defenderArea": "crossroads",
+    "supportArea": "covenantFields"
+  }
+}
