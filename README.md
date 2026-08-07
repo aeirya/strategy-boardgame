@@ -20,6 +20,14 @@ pnpm dev
 
 The bundle compiler runs automatically before `dev`, `build`, `test`, and `typecheck`.
 
+## GitHub Pages demo
+
+The repository includes a GitHub Pages workflow for the Ērān demo:
+
+https://aeirya.github.io/strategy-boardgame/
+
+GitHub Pages cannot run the Fastify/WebSocket server, so the deployed demo uses the same rules engine and UI with a small browser-local transport layer. Games on the Pages build exist only in the current browser tab and are not multiplayer/networked. Local development continues to use the real server.
+
 ## Bundle layout
 
 A bundle is one ordinary directory with three human-editable JSON files:
