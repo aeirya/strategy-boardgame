@@ -11,7 +11,7 @@ type LocalGame = {
   state: GameState;
 };
 
-const useLocalBackend = import.meta.env.VITE_STATIC_BACKEND === "1" || window.location.hostname.endsWith(".github.io");
+const useLocalBackend = window.location.hostname.endsWith(".github.io");
 
 if (useLocalBackend) installLocalBackend();
 
