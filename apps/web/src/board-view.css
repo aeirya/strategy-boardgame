@@ -1,0 +1,128 @@
+/* Optional full-board visual mode.
+ *
+ * Explore mode remains the normal pannable/zoomable board. Fit mode gives the
+ * map the full available width, freezes camera navigation, stretches the SVG
+ * to the board rectangle, and moves tool shelves below the map.
+ */
+
+.board-view-toggle[aria-pressed="true"] {
+  border-color: rgba(244, 212, 143, 0.82);
+  background: rgba(132, 91, 32, 0.78);
+  color: #fff0c8;
+}
+
+.fit-board-view .layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.fit-board-view .side-panel {
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 6px;
+}
+
+.fit-board-view .war-table,
+.fit-board-view .board-engine {
+  width: 100%;
+  min-width: 0;
+}
+
+.fit-board-view .map-svg {
+  width: 100%;
+  height: clamp(330px, calc(100dvh - 185px), 820px);
+  min-height: 0 !important;
+  cursor: default;
+  touch-action: manipulation;
+}
+
+.fit-board-view .map-svg:active {
+  cursor: default;
+}
+
+/* Camera controls are meaningless while the map is fixed. The mode toggle and
+ * ordinary map appearance settings remain available. */
+.fit-board-view .map-controls > button:not(.board-view-toggle) {
+  display: none;
+}
+
+.fit-board-view .board-bottombar {
+  display: none;
+}
+
+/* The vertical tray is useful in Explore mode because it stays beside the
+ * camera. In Fit mode it becomes a compact horizontal shelf below the map so
+ * the board itself gets the full width. */
+.fit-board-view .order-tray {
+  position: static;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-height: none;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0;
+  padding: 7px 9px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.fit-board-view .order-tray .tray-heading {
+  display: grid;
+  flex: 0 0 110px;
+  gap: 2px;
+  align-content: center;
+}
+
+.fit-board-view .order-tray .tray-heading strong {
+  white-space: nowrap;
+}
+
+.fit-board-view .order-tray .special-meter {
+  flex: 0 0 70px;
+  width: 70px;
+}
+
+.fit-board-view .order-tray .tray-group {
+  flex: 0 0 118px;
+  grid-template-columns: 28px minmax(0, 1fr);
+}
+
+.fit-board-view .order-tray .tray-token-row {
+  min-width: 78px;
+}
+
+/* Keep the board prominent on short screens while leaving enough room for the
+ * horizontal tray and browser chrome. */
+@media (max-height: 700px) {
+  .fit-board-view .map-svg {
+    height: max(310px, calc(100dvh - 175px));
+  }
+
+  .fit-board-view .order-tray {
+    gap: 6px;
+    padding-block: 5px;
+  }
+
+  .fit-board-view .order-tray .tray-heading {
+    flex-basis: 96px;
+  }
+
+  .fit-board-view .order-tray .tray-group {
+    flex-basis: 108px;
+  }
+}
+
+@media (max-width: 560px) {
+  .fit-board-view .side-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fit-board-view .map-svg {
+    height: max(300px, calc(100dvh - 168px));
+  }
+}
