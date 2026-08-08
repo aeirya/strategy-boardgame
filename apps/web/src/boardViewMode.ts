@@ -5,6 +5,9 @@ type BoardViewMode = "explore" | "fit";
 const storageKey = "tabletop-board-view-mode";
 let mode: BoardViewMode = window.localStorage.getItem(storageKey) === "fit" ? "fit" : "explore";
 
+const toggle = document.querySelector<HTMLButtonElement>("#board-view-toggle");
+toggle?.addEventListener("click", () => setMode(mode === "fit" ? "explore" : "fit"));
+
 function setMode(next: BoardViewMode) {
   if (next === mode) return;
 
@@ -28,6 +31,7 @@ function persistAndApply() {
 
 function applyMode() {
   const fit = mode === "fit";
+  const boardVisible = !!document.querySelector(".board-engine");
   document.documentElement.classList.toggle("fit-board-view", fit);
 
   for (const map of document.querySelectorAll<SVGSVGElement>(".map-svg")) {
@@ -37,30 +41,15 @@ function applyMode() {
     }
   }
 
-  installToggle();
-}
-
-function installToggle() {
-  const controls = document.querySelector<HTMLElement>(".map-controls");
-  if (!controls) return;
-
-  let toggle = controls.querySelector<HTMLButtonElement>(".board-view-toggle");
-  if (!toggle) {
-    toggle = document.createElement("button");
-    toggle.type = "button";
-    toggle.className = "board-view-toggle";
-    toggle.addEventListener("click", () => setMode(mode === "fit" ? "explore" : "fit"));
-    const settings = controls.querySelector(".map-settings");
-    controls.insertBefore(toggle, settings);
+  if (toggle) {
+    toggle.hidden = !boardVisible;
+    const label = fit ? "Explore map" : "Fit board";
+    if (toggle.textContent !== label) toggle.textContent = label;
+    toggle.title = fit
+      ? "Return to the pannable and zoomable map camera"
+      : "Fit the whole board to the available space and freeze the camera";
+    toggle.setAttribute("aria-pressed", String(fit));
   }
-
-  const fit = mode === "fit";
-  const label = fit ? "Explore" : "Fit";
-  if (toggle.textContent !== label) toggle.textContent = label;
-  toggle.title = fit
-    ? "Return to the pannable and zoomable map camera"
-    : "Fit the whole board to the available space and freeze the camera";
-  toggle.setAttribute("aria-pressed", String(fit));
 }
 
 function resetCamera() {
