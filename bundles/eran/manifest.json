@@ -33,7 +33,104 @@
     "initialCapacity": 2,
     "initialThreat": 2,
     "scoreTarget": 5,
-    "maxRounds": 10
+    "maxRounds": 10,
+    "modes": {
+      "three-houses": {
+        "name": "Three Houses",
+        "description": "A compact west-center-east prototype. Each house begins with one home and one claimed frontier, then must march from that frontier into the neutral Crossroads.",
+        "playerKeys": [
+          "adur",
+          "mihr",
+          "wahram"
+        ],
+        "areaIds": [
+          "adurGate",
+          "whitePass",
+          "mihrCourt",
+          "covenantFields",
+          "wahramHold",
+          "redRoad",
+          "crossroads"
+        ],
+        "minPlayers": 3,
+        "maxPlayers": 3,
+        "scoreTarget": 4,
+        "allowedOrderKinds": [
+          "advance",
+          "defend"
+        ],
+        "allowSpecialOrders": false,
+        "allowedUnitTypes": [
+          "infantry",
+          "cavalry"
+        ],
+        "orderLabels": {
+          "advance": "March",
+          "defend": "Hold"
+        },
+        "startingUnits": {
+          "adur": [
+            {
+              "area": "adurGate",
+              "units": [
+                "infantry"
+              ]
+            },
+            {
+              "area": "whitePass",
+              "units": [
+                "infantry",
+                "cavalry"
+              ]
+            }
+          ],
+          "mihr": [
+            {
+              "area": "mihrCourt",
+              "units": [
+                "infantry"
+              ]
+            },
+            {
+              "area": "covenantFields",
+              "units": [
+                "infantry",
+                "cavalry"
+              ]
+            }
+          ],
+          "wahram": [
+            {
+              "area": "wahramHold",
+              "units": [
+                "infantry"
+              ]
+            },
+            {
+              "area": "redRoad",
+              "units": [
+                "infantry",
+                "cavalry"
+              ]
+            }
+          ]
+        },
+        "openingMoves": {
+          "adur": {
+            "from": "whitePass",
+            "to": "crossroads"
+          },
+          "mihr": {
+            "from": "covenantFields",
+            "to": "crossroads"
+          },
+          "wahram": {
+            "from": "redRoad",
+            "to": "crossroads"
+          }
+        }
+      }
+    }
   },
   "testScenario": {
     "attackerFrom": "whitePass",
