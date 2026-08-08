@@ -2,6 +2,20 @@
 
 A small server-authoritative, event-sourced tabletop prototype. The repository ships with **Ērān**, an original magical-antiquity example bundle; setting-specific names, maps, players, labels, palettes, and cards live in replaceable data bundles.
 
+The main product direction is deliberately simple: **make the current strategy game complete and robust, keep the engine setting-neutral, and generalize only when real bundles prove a need.**
+
+## Project orientation
+
+Before making non-trivial architectural changes, read:
+
+- [`AGENTS.md`](AGENTS.md) — working rules for coding agents, owner preferences, public/private content boundary, and change checklist
+- [`docs/project-direction.md`](docs/project-direction.md) — trajectory, design philosophy, Ērān's role, and intended evolution
+- [`docs/architecture.md`](docs/architecture.md) — package boundaries and neutral engine vocabulary
+- [`docs/bundles.md`](docs/bundles.md) — current human-editable bundle protocol
+- [`docs/roadmap.md`](docs/roadmap.md) — near-term work and intentionally deferred generalization
+
+The engine should prefer plain concepts such as **player, area, unit, army, action, card, resource, track, and adjacency**. Setting-specific language belongs in bundles and UI presentation, not core types.
+
 ## Stack
 
 - TypeScript monorepo with pnpm
@@ -68,9 +82,13 @@ For a legacy map whose topology must not be inferred from geometry, set `"adjace
 
 There is no plugin runtime, database schema, asset pipeline, or general-purpose mod SDK. A bundle is compiled into one typed object before the app starts. Add fields only when a real bundle needs them.
 
+The project should become a better game before it becomes a broader framework.
+
 ## Content boundary
 
 Keep private or third-party setting bundles outside this repository. `bundles/private/`, the compiled bundle, build output, and context-export copies of compiled content are ignored or excluded. This separation helps prevent accidental publication; it is not legal clearance for distributing any particular content.
+
+Older private reference material may exist outside the repository. If a useful mechanic is revisited, adapt the mechanic to the current neutral model rather than importing old themed content wholesale.
 
 ## License
 
