@@ -1,14 +1,20 @@
 import {
+  applyGameModeState,
   createInitialState,
   decide,
+  getGameMode,
+  prepareGameModeCommand,
   publicView,
   reduceEvents,
+  standardGameModeId,
+  validateGameModeCommand,
   type Command,
   type GameState
 } from "@tabletop/rules";
 
 type LocalGame = {
   state: GameState;
+  modeId: string;
 };
 
 const useLocalBackend = import.meta.env.VITE_STATIC_BACKEND === "1" || window.location.hostname.endsWith(".github.io");
@@ -31,10 +37,12 @@ function installLocalBackend() {
     const parts = url.pathname.split("/").filter(Boolean);
 
     if (method === "POST" && parts.length === 1 && parts[0] === "games") {
+      const modeId = url.searchParams.get("mode") ?? standardGameModeId;
+      if (modeId !== standardGameModeId && !getGameMode(modeId)) return jsonResponse({ error: "Unknown game mode." }, 400);
       const gameId = crypto.randomUUID();
       const seed = crypto.randomUUID();
-      games.set(gameId, { state: createInitialState(gameId, seed) });
-      return jsonResponse({ gameId, seed });
+      games.set(gameId, { state: createInitialState(gameId, seed), modeId });
+      return jsonResponse({ gameId, seed, modeId });
     }
 
     const gameId = parts[1];
@@ -47,9 +55,11 @@ function installLocalBackend() {
 
     if (method === "POST" && parts.length === 3 && parts[2] === "commands") {
       try {
-        const command = JSON.parse(await requestBody(input, init)) as Command;
+        const submitted = JSON.parse(await requestBody(input, init)) as Command;
+        const command = prepareGameModeCommand(game.state, submitted, game.modeId);
+        validateGameModeCommand(game.state, command, game.modeId);
         const events = decide(game.state, command);
-        game.state = reduceEvents(game.state, events);
+        game.state = applyGameModeState(reduceEvents(game.state, events), command, game.modeId);
         broadcast(gameId, game.state);
         return jsonResponse({
           events,

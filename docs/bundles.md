@@ -13,6 +13,10 @@ my-bundle/
 
 Defines bundle metadata, UI labels, rule limits, and an optional deterministic test scenario.
 
+A bundle may also define small optional gameplay variants under `rules.modes`. A mode can select participating player keys and map areas, override starting units and the score target, restrict the existing unit/order types, relabel those orders for presentation, and define a simple forced opening move. Modes reuse the normal rules engine; they are not scripts or a separate rules DSL.
+
+The bundled Ērān example includes `three-houses`, a compact three-player prototype using only infantry/cavalry and the existing advance/defend mechanics presented as **March** and **Hold**.
+
 ## `players.json`
 
 Defines configured player identities and their presentation data, starting units, and combat cards.

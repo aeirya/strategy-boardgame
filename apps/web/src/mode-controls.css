@@ -1,0 +1,55 @@
+.game-mode-control {
+  position: fixed;
+  z-index: 10020;
+  left: 18px;
+  bottom: 16px;
+  display: grid;
+  grid-template-columns: auto minmax(112px, auto);
+  align-items: center;
+  gap: 6px 9px;
+  max-width: min(440px, calc(100vw - 36px));
+  padding: 8px 10px;
+  border: 1px solid rgba(222, 181, 96, 0.45);
+  border-radius: 10px;
+  background: rgba(11, 22, 25, 0.92);
+  color: #f1dfb7;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(8px);
+  font: 600 12px/1.2 system-ui, sans-serif;
+}
+
+.game-mode-control > span {
+  color: #e7bb68;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+}
+
+.game-mode-control select {
+  min-width: 126px;
+  padding: 5px 24px 5px 8px;
+  border: 1px solid rgba(231, 187, 104, 0.32);
+  border-radius: 7px;
+  background: #162427;
+  color: #f4ead4;
+}
+
+.game-mode-control small {
+  grid-column: 1 / -1;
+  max-width: 390px;
+  color: rgba(244, 234, 212, 0.72);
+  font-weight: 450;
+  line-height: 1.35;
+}
+
+@media (max-width: 700px) {
+  .game-mode-control {
+    left: 8px;
+    bottom: 8px;
+    max-width: calc(100vw - 16px);
+  }
+
+  .game-mode-control small {
+    display: none;
+  }
+}
