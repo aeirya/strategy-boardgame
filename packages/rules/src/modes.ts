@@ -142,14 +142,15 @@ function applyModeAdjacency(state: GameState, mode: GameModeDefinition): GameSta
 }
 
 function applyModeScore(state: GameState, mode: GameModeDefinition): GameState {
-  if (!mode.scoreTarget) return state;
+  const scoreTarget = mode.scoreTarget;
+  if (!scoreTarget) return state;
   const active = state.players.map((player) => player.playerKey);
   const score = { ...state.tracks.score };
   for (const playerKey of active) score[playerKey] = 0;
   for (const [area, playerKey] of Object.entries(state.control)) {
     if (active.includes(playerKey) && state.areas[area]?.objective) score[playerKey] += 1;
   }
-  const winner = active.find((playerKey) => score[playerKey] >= mode.scoreTarget) ?? null;
+  const winner = active.find((playerKey) => score[playerKey] >= scoreTarget) ?? null;
   return {
     ...state,
     tracks: { ...state.tracks, score },
