@@ -1,4 +1,4 @@
-import type { AreaType, UnitType } from "./types.js";
+import type { AreaType, OrderKind, UnitType } from "./types.js";
 
 export type CombatCardDefinition = {
   id: string;
@@ -49,6 +49,22 @@ export type BundleAreaDefinition = {
   adjacent: string[];
 };
 
+export type GameModeDefinition = {
+  name: string;
+  description?: string;
+  playerKeys: string[];
+  areaIds?: string[];
+  minPlayers?: number;
+  maxPlayers?: number;
+  scoreTarget?: number;
+  allowedOrderKinds?: OrderKind[];
+  allowSpecialOrders?: boolean;
+  allowedUnitTypes?: UnitType[];
+  orderLabels?: Partial<Record<OrderKind, string>>;
+  startingUnits?: Record<string, StartingUnitPlacement[]>;
+  openingMoves?: Record<string, { from: string; to: string }>;
+};
+
 export type GameBundle = {
   schemaVersion: 1;
   id: string;
@@ -85,6 +101,7 @@ export type GameBundle = {
     initialThreat: number;
     scoreTarget: number;
     maxRounds: number;
+    modes?: Record<string, GameModeDefinition>;
   };
   testScenario?: {
     attackerFrom: string;
