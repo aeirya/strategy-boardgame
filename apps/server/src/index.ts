@@ -1,10 +1,24 @@
 import websocket from "@fastify/websocket";
-import { createInitialState, decide, publicView, reduceEvents, type Command, type Event, type GameState } from "@tabletop/rules";
+import {
+  applyGameModeState,
+  createInitialState,
+  decide,
+  getGameMode,
+  prepareGameModeCommand,
+  publicView,
+  reduceEvents,
+  standardGameModeId,
+  validateGameModeCommand,
+  type Command,
+  type Event,
+  type GameState
+} from "@tabletop/rules";
 import Fastify from "fastify";
 
 type StoredGame = {
   state: GameState;
   events: Event[];
+  modeId: string;
 };
 
 const games = new Map<string, StoredGame>();
@@ -43,12 +57,14 @@ server.get("/health", async () => ({ ok: true }));
 
 server.get("/favicon.ico", async (_request, reply) => reply.code(204).send());
 
-server.post("/games", async () => {
+server.post<{ Querystring: { mode?: string } }>("/games", async (request, reply) => {
+  const modeId = request.query.mode ?? standardGameModeId;
+  if (modeId !== standardGameModeId && !getGameMode(modeId)) return reply.code(400).send({ error: "Unknown game mode." });
   const gameId = crypto.randomUUID();
   const seed = crypto.randomUUID();
   const state = createInitialState(gameId, seed);
-  games.set(gameId, { state, events: [{ type: "gameCreated", gameId, seed }] });
-  return { gameId, seed };
+  games.set(gameId, { state, events: [{ type: "gameCreated", gameId, seed }], modeId });
+  return { gameId, seed, modeId };
 });
 
 server.get<{ Params: { gameId: string }; Querystring: { playerId?: string } }>("/games/:gameId", async (request, reply) => {
@@ -61,9 +77,10 @@ server.post<{ Params: { gameId: string }; Body: Command }>("/games/:gameId/comma
   const game = games.get(request.params.gameId);
   if (!game) return reply.code(404).send({ error: "Game not found." });
   try {
-    const command = request.body as Command;
+    const command = prepareGameModeCommand(game.state, request.body as Command, game.modeId);
+    validateGameModeCommand(game.state, command, game.modeId);
     const events = decide(game.state, command);
-    game.state = reduceEvents(game.state, events);
+    game.state = applyGameModeState(reduceEvents(game.state, events), command, game.modeId);
     game.events.push(...events);
     broadcast(request.params.gameId, game.state);
     return { events, state: publicView(game.state, "playerId" in command ? command.playerId : undefined) };
