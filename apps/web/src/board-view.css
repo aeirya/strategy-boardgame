@@ -5,9 +5,29 @@
  * to the board rectangle, and moves tool shelves below the map.
  */
 
+.board-view-toggle {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  z-index: 140;
+  min-height: 34px;
+  border-color: rgba(244, 212, 143, 0.5);
+  background: rgba(13, 18, 22, 0.94);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
+  padding: 7px 10px;
+  color: #f4e7d0;
+  font-size: 11px;
+  font-weight: 900;
+  backdrop-filter: blur(10px);
+}
+
+.board-view-toggle[hidden] {
+  display: none;
+}
+
 .board-view-toggle[aria-pressed="true"] {
   border-color: rgba(244, 212, 143, 0.82);
-  background: rgba(132, 91, 32, 0.78);
+  background: rgba(132, 91, 32, 0.92);
   color: #fff0c8;
 }
 
@@ -40,9 +60,9 @@
   cursor: default;
 }
 
-/* Camera controls are meaningless while the map is fixed. The mode toggle and
- * ordinary map appearance settings remain available. */
-.fit-board-view .map-controls > button:not(.board-view-toggle) {
+/* Camera controls are meaningless while the map is fixed. Ordinary map
+ * appearance settings stay available through the Map menu. */
+.fit-board-view .map-controls > button {
   display: none;
 }
 
@@ -118,6 +138,13 @@
 }
 
 @media (max-width: 560px) {
+  .board-view-toggle {
+    right: 6px;
+    bottom: 6px;
+    min-height: 30px;
+    padding: 5px 8px;
+  }
+
   .fit-board-view .side-panel {
     grid-template-columns: minmax(0, 1fr);
   }
