@@ -1,11 +1,10 @@
-import { gameBundle, standardGameModeId, type GameState, type Order } from "@tabletop/rules";
+import { gameBundle, standardGameModeId, type Order } from "@tabletop/rules";
 import "./mode-controls.css";
 
 const params = new URLSearchParams(window.location.search);
 const selectedModeId = params.get("mode") ?? standardGameModeId;
 const selectedMode = gameBundle.rules.modes?.[selectedModeId];
 const modeEntries = Object.entries(gameBundle.rules.modes ?? {});
-const latestStateByGame = new Map<string, GameState>();
 
 document.documentElement.dataset.gameMode = selectedModeId;
 installModeControl();
@@ -59,60 +58,32 @@ function installModeFetchAdapter() {
     let nextInit = init;
     const url = new URL(input instanceof Request ? input.url : String(input), window.location.href);
     const method = (init?.method ?? (input instanceof Request ? input.method : "GET")).toUpperCase();
-    const gameId = gameIdFromUrl(url);
 
     if (selectedMode && method === "POST" && url.pathname === "/games") {
       url.searchParams.set("mode", selectedModeId);
       nextInput = url.toString();
     }
 
-    if (selectedMode && gameId && method === "POST" && url.pathname.endsWith("/commands") && typeof init?.body === "string") {
+    if (selectedMode && method === "POST" && url.pathname.endsWith("/commands") && typeof init?.body === "string") {
       const command = JSON.parse(init.body) as { type?: string; playerId?: string; orders?: Record<string, Order> };
       if (command.type === "placeOrders" && command.playerId?.startsWith("ai-") && command.orders) {
-        command.orders = normalizeBotOrders(command.playerId.slice(3), command.orders, latestStateByGame.get(gameId));
+        command.orders = normalizeBotOrders(command.orders);
         nextInit = { ...init, body: JSON.stringify(command) };
       }
     }
 
-    const response = await previousFetch(nextInput, nextInit);
-    void rememberState(gameId, response);
-    return response;
+    return previousFetch(nextInput, nextInit);
   };
 }
 
-function normalizeBotOrders(playerKey: string, orders: Record<string, Order>, state?: GameState): Record<string, Order> {
+function normalizeBotOrders(orders: Record<string, Order>): Record<string, Order> {
   if (!selectedMode) return orders;
   const allowed = selectedMode.allowedOrderKinds ?? [];
   const fallback = allowed.includes("defend") ? "defend" : allowed[0];
-  const opening = selectedMode.openingMoves?.[playerKey];
-
-  if (state?.tracks.round === 1 && opening) {
-    return Object.fromEntries(Object.keys(orders).map((area) => [area, { kind: area === opening.from ? "advance" : "defend" } satisfies Order]));
-  }
-
   return Object.fromEntries(Object.entries(orders).map(([area, order]) => {
     const kind = allowed.length === 0 || allowed.includes(order.kind) ? order.kind : fallback;
     return [area, { kind: kind ?? order.kind } satisfies Order];
   }));
-}
-
-async function rememberState(gameId: string | undefined, response: Response) {
-  if (!gameId || !response.ok) return;
-  try {
-    const state = gameStateFromPayload(await response.clone().json());
-    if (state) latestStateByGame.set(gameId, state);
-  } catch {
-    // Non-JSON responses are unrelated to game state.
-  }
-}
-
-function gameStateFromPayload(payload: unknown): GameState | undefined {
-  if (!payload || typeof payload !== "object") return undefined;
-  const envelope = payload as { state?: unknown };
-  const candidate = envelope.state ?? payload;
-  if (!candidate || typeof candidate !== "object") return undefined;
-  const state = candidate as GameState;
-  return state.tracks && Array.isArray(state.players) ? state : undefined;
 }
 
 function installPlayerChoiceFilter() {
@@ -134,8 +105,4 @@ function installPlayerChoiceFilter() {
   apply();
   const observer = new MutationObserver(apply);
   observer.observe(document.body, { childList: true, subtree: true });
-}
-
-function gameIdFromUrl(url: URL): string | undefined {
-  return url.pathname.match(/^\/games\/([^/]+)/)?.[1];
 }
