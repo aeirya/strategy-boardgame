@@ -18,10 +18,9 @@ function installCombatFetchAutomation() {
 
 async function inspectState(gameId: string, response: Response, send: typeof window.fetch) {
   try {
-    const payload = await response.clone().json() as GameState | { state?: GameState };
-    const state = "state" in payload ? payload.state : payload;
+    const state = gameStateFromPayload(await response.clone().json());
     const combat = state?.combat;
-    if (!combat || combat.status !== "revealed") return;
+    if (!state || !combat || combat.status !== "revealed") return;
 
     const attacker = state.players.find((player) => player.playerKey === combat.attacker);
     const defender = state.players.find((player) => player.playerKey === combat.defender);
@@ -45,6 +44,15 @@ async function inspectState(gameId: string, response: Response, send: typeof win
   } catch {
     // Ignore non-state JSON responses.
   }
+}
+
+function gameStateFromPayload(payload: unknown): GameState | undefined {
+  if (!payload || typeof payload !== "object") return undefined;
+  const envelope = payload as { state?: unknown };
+  const candidate = envelope.state ?? payload;
+  if (!candidate || typeof candidate !== "object") return undefined;
+  const state = candidate as GameState;
+  return state.tracks && Array.isArray(state.players) ? state : undefined;
 }
 
 function installCombatResultPolish() {
