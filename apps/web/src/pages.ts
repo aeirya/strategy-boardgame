@@ -15,7 +15,7 @@ const useLocalBackend = import.meta.env.VITE_STATIC_BACKEND === "1" || window.lo
 
 if (useLocalBackend) installLocalBackend();
 
-void import("./main.tsx");
+void import("./main.tsx").then(() => import("./responsive.css"));
 
 function installLocalBackend() {
   const games = new Map<string, LocalGame>();
