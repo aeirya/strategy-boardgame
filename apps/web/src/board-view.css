@@ -1,8 +1,8 @@
 /* Optional full-board visual mode.
  *
- * Explore mode remains the normal pannable/zoomable board. Fit mode gives the
- * map the full available width, freezes camera navigation, stretches the SVG
- * to the board rectangle, and moves tool shelves below the map.
+ * Explore mode remains the normal pannable/zoomable board. Fit mode crops the
+ * SVG viewport to the actual territory bounds, preserves the board aspect
+ * ratio, freezes camera navigation, and moves tool shelves below the map.
  */
 
 .board-view-toggle {
@@ -48,10 +48,18 @@
   min-width: 0;
 }
 
+/* boardViewMode.ts supplies --fit-board-ratio from the rendered territory
+ * bounds. Matching the CSS box to that ratio means preserveAspectRatio=meet
+ * does not create a second layer of letterboxing, while the dynamic viewBox
+ * removes the old unused sea margin. */
 .fit-board-view .map-svg {
+  display: block;
   width: 100%;
-  height: clamp(330px, calc(100dvh - 185px), 820px);
+  height: auto !important;
   min-height: 0 !important;
+  max-height: calc(100dvh - 155px) !important;
+  aspect-ratio: var(--fit-board-ratio, 1.35);
+  margin-inline: auto;
   cursor: default;
   touch-action: manipulation;
 }
@@ -116,11 +124,9 @@
   min-width: 78px;
 }
 
-/* Keep the board prominent on short screens while leaving enough room for the
- * horizontal tray and browser chrome. */
 @media (max-height: 700px) {
   .fit-board-view .map-svg {
-    height: max(310px, calc(100dvh - 175px));
+    max-height: calc(100dvh - 138px) !important;
   }
 
   .fit-board-view .order-tray {
@@ -140,7 +146,7 @@
 @media (max-width: 560px) {
   .board-view-toggle {
     right: 6px;
-    bottom: 6px;
+    bottom: calc(6px + env(safe-area-inset-bottom));
     min-height: 30px;
     padding: 5px 8px;
   }
@@ -150,6 +156,6 @@
   }
 
   .fit-board-view .map-svg {
-    height: max(300px, calc(100dvh - 168px));
+    max-height: none !important;
   }
 }
