@@ -1,4 +1,4 @@
-import type { Order, OrderKind } from "@tabletop/rules";
+import { gameBundle, type Order, type OrderKind } from "@tabletop/rules";
 
 export type OrderVariant = {
   order: Order;
@@ -29,7 +29,7 @@ export type DraftHistory = {
   future: DraftSnapshot[];
 };
 
-export const orderFamilies: OrderFamily[] = [
+const baseOrderFamilies: OrderFamily[] = [
   { kind: "advance", label: "Advance", shortLabel: "Advance", shortcut: "1", angle: 144, variants: [
     { order: { kind: "advance" }, count: 2, modifier: "-1", strength: 0 },
     { order: { kind: "advance", special: true }, count: 1, modifier: "+1", strength: 1 }
@@ -51,6 +51,23 @@ export const orderFamilies: OrderFamily[] = [
     { order: { kind: "gather", special: true }, count: 1, strength: 1 }
   ] }
 ];
+
+const selectedModeId = typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("mode") ?? "";
+const selectedMode = gameBundle.rules.modes?.[selectedModeId];
+
+export const orderFamilies: OrderFamily[] = baseOrderFamilies
+  .filter((family) => !selectedMode?.allowedOrderKinds || selectedMode.allowedOrderKinds.includes(family.kind))
+  .map((family) => {
+    const label = selectedMode?.orderLabels?.[family.kind] ?? family.label;
+    return {
+      ...family,
+      label,
+      shortLabel: label,
+      variants: selectedMode?.allowSpecialOrders === false
+        ? family.variants.filter((variant) => !variant.order.special)
+        : family.variants
+    };
+  });
 
 export function ordersEqual(left?: Order | null, right?: Order | null) {
   return !!left && !!right && left.kind === right.kind && !!left.special === !!right.special;
