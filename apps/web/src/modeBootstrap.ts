@@ -39,7 +39,7 @@ function installModeControl() {
     if (select.value === standardGameModeId) url.searchParams.delete("mode");
     else url.searchParams.set("mode", select.value);
     url.hash = "";
-    window.location.assign(url);
+    window.location.assign(url.toString());
   });
   container.append(select);
 
@@ -99,12 +99,20 @@ function normalizeBotOrders(playerKey: string, orders: Record<string, Order>, st
 async function rememberState(gameId: string | undefined, response: Response) {
   if (!gameId || !response.ok) return;
   try {
-    const payload = await response.clone().json() as GameState | { state?: GameState };
-    const state = "state" in payload ? payload.state : payload;
-    if (state?.tracks) latestStateByGame.set(gameId, state);
+    const state = gameStateFromPayload(await response.clone().json());
+    if (state) latestStateByGame.set(gameId, state);
   } catch {
     // Non-JSON responses are unrelated to game state.
   }
+}
+
+function gameStateFromPayload(payload: unknown): GameState | undefined {
+  if (!payload || typeof payload !== "object") return undefined;
+  const envelope = payload as { state?: unknown };
+  const candidate = envelope.state ?? payload;
+  if (!candidate || typeof candidate !== "object") return undefined;
+  const state = candidate as GameState;
+  return state.tracks && Array.isArray(state.players) ? state : undefined;
 }
 
 function installPlayerChoiceFilter() {
