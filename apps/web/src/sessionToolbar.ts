@@ -2,15 +2,33 @@ import "./session-toolbar.css";
 
 const root = document.getElementById("root");
 
-const button = document.createElement("button");
-button.type = "button";
-button.id = "session-menu-toggle";
-button.className = "session-menu-toggle-external";
-button.textContent = "Game";
-button.setAttribute("aria-haspopup", "dialog");
-button.setAttribute("aria-expanded", "false");
-button.setAttribute("aria-controls", "session-menu-popover");
-document.body.append(button);
+const topbarLinks = [
+  { label: "Icons", href: "#icon-designer" },
+  { label: "Map", href: "#map-editor" }
+] as const;
+
+const topbar = document.createElement("nav");
+topbar.className = "game-topbar-actions";
+topbar.setAttribute("aria-label", "Game tools");
+
+topbarLinks.forEach(({ label, href }) => {
+  const link = document.createElement("a");
+  link.className = "game-topbar-action";
+  link.href = href;
+  link.textContent = label;
+  topbar.append(link);
+});
+
+const gameButton = document.createElement("button");
+gameButton.type = "button";
+gameButton.id = "session-menu-toggle";
+gameButton.className = "game-topbar-action";
+gameButton.textContent = "Game";
+gameButton.setAttribute("aria-haspopup", "dialog");
+gameButton.setAttribute("aria-expanded", "false");
+gameButton.setAttribute("aria-controls", "session-menu-popover");
+topbar.append(gameButton);
+document.body.append(topbar);
 
 const popover = document.createElement("section");
 popover.id = "session-menu-popover";
@@ -19,7 +37,7 @@ popover.hidden = true;
 popover.setAttribute("aria-label", "Game session details");
 document.body.append(popover);
 
-button.addEventListener("click", () => {
+gameButton.addEventListener("click", () => {
   if (popover.hidden) openPopover();
   else closePopover();
 });
@@ -28,11 +46,18 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closePopover();
 });
 
+window.addEventListener("hashchange", () => {
+  closePopover();
+  syncActiveLinks();
+});
+
 document.addEventListener("pointerdown", (event) => {
   if (popover.hidden) return;
   const target = event.target as Node;
-  if (!popover.contains(target) && !button.contains(target)) closePopover();
+  if (!popover.contains(target) && !gameButton.contains(target)) closePopover();
 });
+
+syncActiveLinks();
 
 function toolbar() {
   return root?.querySelector<HTMLElement>("main.game-started .toolbar") ?? null;
@@ -42,12 +67,21 @@ function openPopover() {
   if (!toolbar()) return;
   renderPopover();
   popover.hidden = false;
-  button.setAttribute("aria-expanded", "true");
+  gameButton.setAttribute("aria-expanded", "true");
 }
 
 function closePopover() {
   popover.hidden = true;
-  button.setAttribute("aria-expanded", "false");
+  gameButton.setAttribute("aria-expanded", "false");
+}
+
+function syncActiveLinks() {
+  topbar.querySelectorAll<HTMLAnchorElement>("a.game-topbar-action").forEach((link) => {
+    const active = link.hash === window.location.hash;
+    link.classList.toggle("active", active);
+    if (active) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
 }
 
 function renderPopover() {
