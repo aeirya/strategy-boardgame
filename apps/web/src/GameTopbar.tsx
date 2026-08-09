@@ -64,7 +64,7 @@ export function GameTopbar({ botEnabled, gameId, hash, playerKey, playerName, st
         <StatusItem label="Round" value={state.tracks.round} />
         <StatusItem label="Phase" value={phaseLabel(state.phase)} />
         <StatusItem label="To act" value={actor} />
-        <StatusItem label={gameBundle.ui.threatLabel} value={state.tracks.threat} />
+        <StatusItem label={gameBundle.ui.threatLabel} value={state.tracks.threat} emphasis />
       </div>
 
       <div className="game-topbar-actions">
@@ -119,9 +119,9 @@ export function GameTopbar({ botEnabled, gameId, hash, playerKey, playerName, st
   );
 }
 
-function StatusItem({ label, value }: { label: string; value: string | number }) {
+function StatusItem({ label, value, emphasis = false }: { label: string; value: string | number; emphasis?: boolean }) {
   return (
-    <div>
+    <div className={`game-topbar-stat${emphasis ? " is-emphasis" : ""}`}>
       <span>{label}</span>
       <strong>{value}</strong>
     </div>

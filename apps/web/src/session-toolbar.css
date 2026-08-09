@@ -20,44 +20,51 @@
 .game-topbar-status {
   display: inline-flex;
   align-items: center;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
-  max-width: 680px;
   height: var(--game-topbar-control-height);
+  gap: 4px;
   overflow: hidden;
-  border: 1px solid rgba(232, 211, 173, 0.2);
-  border-radius: 8px;
-  background: rgba(18, 23, 26, 0.9);
 }
 
-.game-topbar-status > div {
+.game-topbar-stat {
   display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  min-width: 0;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 6px;
   height: 100%;
+  min-width: 0;
   padding: 0 9px;
+  border: 1px solid rgba(232, 211, 173, 0.16);
+  border-radius: 7px;
+  background: rgba(18, 23, 26, 0.72);
   white-space: nowrap;
 }
 
-.game-topbar-status > div + div {
-  border-left: 1px solid rgba(232, 211, 173, 0.14);
-}
-
-.game-topbar-status span {
+.game-topbar-stat span {
   color: #a9967e;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 750;
   line-height: 1;
 }
 
-.game-topbar-status strong {
+.game-topbar-stat strong {
   overflow: hidden;
   color: #f4e7d0;
   font-size: 12px;
   font-weight: 900;
+  font-variant-numeric: tabular-nums;
   line-height: 1;
   text-overflow: ellipsis;
+}
+
+.game-topbar-stat.is-emphasis {
+  border-color: rgba(224, 177, 101, 0.34);
+  background: rgba(68, 52, 33, 0.42);
+}
+
+.game-topbar-stat.is-emphasis span {
+  color: #c4a77c;
 }
 
 .game-topbar-actions {
@@ -203,13 +210,13 @@
     padding-inline: 6px;
   }
 
-  .game-topbar-status > div {
-    gap: 0;
-    padding-inline: 7px;
+  .game-topbar-status {
+    gap: 3px;
   }
 
-  .game-topbar-status span {
-    display: none;
+  .game-topbar-stat {
+    gap: 4px;
+    padding-inline: 7px;
   }
 
   .game-topbar-actions {
@@ -224,8 +231,12 @@
     padding: 4px;
   }
 
-  .game-topbar-status > div {
+  .game-topbar-stat {
     padding-inline: 6px;
+  }
+
+  .game-topbar-stat:not(.is-emphasis) span {
+    display: none;
   }
 
   .game-topbar-action {
