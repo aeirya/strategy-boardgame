@@ -1,0 +1,27 @@
+{
+  "name": "Strategy Boardgame",
+  "short_name": "Strategy",
+  "description": "A compact strategy boardgame built for touch and desktop play.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0b1013",
+  "theme_color": "#0b1013",
+  "categories": ["games"],
+  "icons": [
+    {
+      "src": "./icons/app-icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
