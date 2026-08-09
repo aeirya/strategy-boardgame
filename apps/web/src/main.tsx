@@ -728,11 +728,9 @@ function App() {
                 onDefaultOrders={placeDemoOrders}
                 onAutoplay={autoplayMyStep}
               />
-              <InfluenceBoard state={effectiveState} compact={gameStarted} />
-              <OrdersPanel localOrders={localOrders} playerId={playerId} state={effectiveState} />
-              <PlayerPanel state={effectiveState} me={me} compact={gameStarted} />
               <AreaPanel area={selected} state={effectiveState} />
-              {effectiveState.phase === "advance" && <PieceLegend />}
+              <PlayerPanel state={effectiveState} me={me} compact={gameStarted} />
+              <InfluenceBoard state={effectiveState} compact={gameStarted} />
               <CombatCardsPanel me={me} />
               <LogPanel state={effectiveState} />
             </aside>
@@ -1935,26 +1933,6 @@ function OrderTray({ localOrders, playerId, selectedOrder, state, onDragEnd, onD
   );
 }
 
-function PieceLegend() {
-  return (
-    <details className="panel compact-panel piece-legend">
-      <summary className="panel-heading">
-        <p className="eyebrow">Pieces</p>
-        <h2>Legend</h2>
-      </summary>
-      <div className="legend-grid">
-        {unitTypes.map((type) => (
-          <span key={type}>
-            <svg viewBox="-18 -18 36 36" aria-hidden="true"><UnitIcon type={type} /></svg>
-            {unitLabel(type)}
-          </span>
-        ))}
-      </div>
-      <a className="tool-link compact-tool-link" href="#icon-designer">Icon Designer</a>
-    </details>
-  );
-}
-
 function IconDesigner({ onClose }: { onClose: () => void }) {
   const [selectedTarget, setSelectedTarget] = useState<EditableIconTarget>({ group: "units", key: "infantry", label: unitLabel("infantry") });
   const [designs, setDesigns] = useState(loadIconDesigns);
@@ -2424,7 +2402,7 @@ function InfluenceBoard({ compact, state }: { compact?: boolean; state: GameStat
       <details className="panel compact-panel influence-board compact-side-panel">
         <summary className="panel-heading influence-heading">
           <p className="eyebrow">Influence</p>
-          <h2>Resource Tracks</h2>
+          <h2>Priority Tracks</h2>
         </summary>
         {content}
       </details>
@@ -2435,7 +2413,7 @@ function InfluenceBoard({ compact, state }: { compact?: boolean; state: GameStat
     <section className="panel influence-board" aria-label="Influence board">
       <div className="panel-heading influence-heading">
         <p className="eyebrow">Influence</p>
-        <h2>Resource Tracks</h2>
+        <h2>Priority Tracks</h2>
       </div>
       {content}
     </section>
@@ -2471,7 +2449,7 @@ function PlayerPanel({ compact, state, me }: { compact?: boolean; state: GameSta
       <details className="panel compact-panel scoreboard-panel compact-side-panel">
         <summary className="panel-heading">
           <p className="eyebrow">{gameBundle.ui.playerPlural}</p>
-          <h2>{me ? playerTheme[me.playerKey].label : gameBundle.ui.playerPlural}</h2>
+          <h2>Scores</h2>
         </summary>
         {content}
       </details>
@@ -2486,31 +2464,6 @@ function PlayerPanel({ compact, state, me }: { compact?: boolean; state: GameSta
       </div>
       {content}
     </section>
-  );
-}
-
-function OrdersPanel({ localOrders, playerId, state }: { localOrders: Record<string, Order>; playerId: string; state: GameState }) {
-  const player = state.players.find((candidate) => candidate.id === playerId);
-  const specialLimit = player ? specialOrderLimitFor(state, player.playerKey) : 0;
-  const usedSpecial = Object.values(localOrders).filter((order) => order.special).length;
-  const placements = getLegalOrderPlacements(state, playerId);
-  const placed = placements.filter((placement) => localOrders[placement.area]).length;
-  return (
-    <details className="panel compact-panel orders-card" open={state.phase === "planning"}>
-      <summary className="panel-heading">
-        <p className="eyebrow">Orders</p>
-        <h2>{state.phase === "planning" ? `${placed}/${placements.length} drafted` : "Tray"}</h2>
-      </summary>
-      <div className="order-progress">
-        <strong>{placed}/{placements.length}</strong>
-        <span>orders placed</span>
-      </div>
-      <div className="special-line">
-        <span>Special orders</span>
-        <strong>{usedSpecial}/{specialLimit}</strong>
-      </div>
-      <p className="hint">Use the physical tray on the board. Drag a token onto a highlighted territory, or click a token then click a territory.</p>
-    </details>
   );
 }
 
@@ -2531,8 +2484,8 @@ function commandHint(state: GameState, playerId: string, interaction: Interactio
       const selectedCount = interaction.selectedUnits.length;
       const queuedCount = interaction.moves.length;
       return selectedCount > 0
-        ? `${actor} is advanceing from ${state.areas[interaction.from].name}. Click a highlighted destination to move.`
-        : `${actor} is advanceing from ${state.areas[interaction.from].name}. ${queuedCount > 0 ? "Assign more units or resolve this Advance order." : "Choose units to assign for this Advance order."}`;
+        ? `${actor} is advancing from ${state.areas[interaction.from].name}. Click a highlighted destination to move.`
+        : `${actor} is advancing from ${state.areas[interaction.from].name}. ${queuedCount > 0 ? "Assign more units or resolve this Advance order." : "Choose units to assign for this Advance order."}`;
     }
     return `${actor} may advance. Next click: choose one highlighted advance source, or skip.`;
   }
@@ -2607,7 +2560,6 @@ function ActionPanel({ interaction, localOrders, state, playerId, myAreas, selec
             <button disabled={!canRedo} onClick={onRedo}>Redo</button>
             <button disabled={Object.keys(localOrders).length === 0} onClick={onClearLocalOrders}>Clear</button>
           </div>
-          <button className="ghost" disabled={!myTurn} onClick={onDefaultOrders}>Quick Demo Orders</button>
         </>
       ) : (
         <>
@@ -2673,7 +2625,11 @@ function ActionPanel({ interaction, localOrders, state, playerId, myAreas, selec
         </>
       )}
 
-      <button className="ghost" disabled={!myTurn} onClick={onAutoplay}>Auto-play My Step · Space</button>
+      <details className="command-assist">
+        <summary>Assist & testing</summary>
+        {state.phase === "planning" && <button className="ghost" disabled={!myTurn} onClick={onDefaultOrders}>Fill demo orders</button>}
+        <button className="ghost" disabled={!myTurn} onClick={onAutoplay}>Auto-play current step · Space</button>
+      </details>
     </section>
   );
 }
@@ -2707,7 +2663,6 @@ function CombatCardsPanel({ me }: { me?: GameState["players"][number] }) {
           );
         })}
       </div>
-      <p className="hint">Combat card choice will plug into this hand once card effects are implemented.</p>
     </details>
   );
 }
