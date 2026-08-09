@@ -1,0 +1,40 @@
+name: Apply sidebar cleanup
+
+on:
+  push:
+    branches: [ui/sidebar-cleanup]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ui/sidebar-cleanup
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Apply sidebar refactor
+        run: python3 .github/apply-sidebar-refactor.py
+      - name: Remove temporary helpers
+        run: rm .github/apply-sidebar-refactor.py .github/workflows/apply-sidebar-refactor.yml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm build
+      - name: Commit sidebar cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Simplify gameplay sidebar" || exit 0
+          git push origin HEAD:ui/sidebar-cleanup
