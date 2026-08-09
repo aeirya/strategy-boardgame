@@ -1,0 +1,507 @@
+from pathlib import Path
+import re
+
+root = Path(".")
+main_path = root / "apps/web/src/main.tsx"
+styles_path = root / "apps/web/src/styles.css"
+index_path = root / "apps/web/index.html"
+old_session_path = root / "apps/web/src/sessionToolbar.ts"
+topbar_path = root / "apps/web/src/GameTopbar.tsx"
+topbar_css_path = root / "apps/web/src/session-toolbar.css"
+
+main = main_path.read_text()
+import_anchor = 'import { editorHexTiles, inspectMapIntegrity, mapTerrainTypes, terrainTheme, visualAreasById, visualMap, type HexTile, type MapPoint, type MapTerrain, type VisualMapArea } from "./visualMap";\n'
+if import_anchor not in main:
+    raise SystemExit("main.tsx import anchor not found")
+main = main.replace(import_anchor, import_anchor + 'import { GameTopbar } from "./GameTopbar";\n', 1)
+
+toolbar_pattern = re.compile(r'\n      <section className="toolbar">.*?\n      </section>\n\n      \{showIconDesigner', re.S)
+toolbar_replacement = r'''
+      {!gameStarted && (
+        <section className="toolbar">
+          <label>
+            Game ID
+            <input value={gameId} onChange={(event) => setGameId(event.target.value)} placeholder="Paste game id" />
+          </label>
+          <label>
+            Name
+            <input value={name} onChange={(event) => setName(event.target.value)} />
+          </label>
+          <label>
+            {gameBundle.ui.playerLabel}
+            <select value={playerKey} onChange={(event) => setPlayerKey(event.target.value as PlayerKey)}>
+              {playerKeys.map((candidate) => <option key={candidate} value={candidate}>{playerTheme[candidate].label}</option>)}
+            </select>
+          </label>
+          <button disabled={!gameId || !!me} onClick={() => submit({ type: "join", playerId, name, playerKey })}>Join</button>
+          <button disabled={!me} onClick={() => submit({ type: "ready", playerId, ready: !me?.ready })}>{me?.ready ? "Unready" : "Ready"}</button>
+          <button disabled={!state || state.phase !== "lobby"} onClick={() => submit({ type: "start" })}>Start</button>
+          <label className="toggle">
+            <input checked={botEnabled} onChange={(event) => setBotEnabled(event.target.checked)} type="checkbox" />
+            AI pilot
+          </label>
+        </section>
+      )}
+
+      {gameStarted && effectiveState && (
+        <GameTopbar
+          botEnabled={botEnabled}
+          gameId={gameId}
+          hash={hash}
+          playerKey={me?.playerKey ?? playerKey}
+          playerName={me?.name ?? name}
+          state={effectiveState}
+          onBotEnabledChange={setBotEnabled}
+        />
+      )}
+
+      {showIconDesigner'''
+main, count = toolbar_pattern.subn(toolbar_replacement, main, count=1)
+if count != 1:
+    raise SystemExit(f"expected one toolbar block, replaced {count}")
+
+old_status = '''          <section className="status-strip">
+            <div>
+              <span>Round</span>
+              <strong>{effectiveState.tracks.round}</strong>
+            </div>
+            <div>
+              <span>Phase</span>
+              <strong>{phaseLabel(effectiveState.phase)}</strong>
+            </div>
+            <div>
+              <span>To act</span>
+              <strong>{effectiveState.pending ? playerTheme[effectiveState.pending.playerKey].label : effectiveState.winner ? `${playerTheme[effectiveState.winner].label} wins` : "None"}</strong>
+            </div>
+            <div>
+              <span>{gameBundle.ui.threatLabel}</span>
+              <strong>{effectiveState.tracks.threat}</strong>
+            </div>
+          </section>
+'''
+new_status = '''          {!gameStarted && (
+            <section className="status-strip">
+              <div>
+                <span>Round</span>
+                <strong>{effectiveState.tracks.round}</strong>
+              </div>
+              <div>
+                <span>Phase</span>
+                <strong>{phaseLabel(effectiveState.phase)}</strong>
+              </div>
+              <div>
+                <span>To act</span>
+                <strong>{effectiveState.pending ? playerTheme[effectiveState.pending.playerKey].label : effectiveState.winner ? `${playerTheme[effectiveState.winner].label} wins` : "None"}</strong>
+              </div>
+              <div>
+                <span>{gameBundle.ui.threatLabel}</span>
+                <strong>{effectiveState.tracks.threat}</strong>
+              </div>
+            </section>
+          )}
+'''
+if old_status not in main:
+    raise SystemExit("status block not found")
+main = main.replace(old_status, new_status, 1)
+main_path.write_text(main)
+
+styles = styles_path.read_text()
+dead_pattern = re.compile(r'\n\.game-started \.toolbar \{.*?\n\.started-tools \{\n  display: flex;\n  gap: 6px;\n  margin-left: auto;\n\}\n', re.S)
+styles, count = dead_pattern.subn("\n", styles, count=1)
+if count != 1:
+    raise SystemExit(f"expected one legacy in-game toolbar CSS block, removed {count}")
+styles_path.write_text(styles)
+
+index = index_path.read_text()
+session_script = '    <script type="module" src="/src/sessionToolbar.ts"></script>\n'
+if session_script not in index:
+    raise SystemExit("sessionToolbar script tag not found")
+index_path.write_text(index.replace(session_script, "", 1))
+
+topbar_path.write_text('''import { gameBundle, playerTheme, type GameState, type PlayerKey } from "@tabletop/rules";
+import { useEffect, useRef, useState } from "react";
+import "./session-toolbar.css";
+
+type GameTopbarProps = {
+  botEnabled: boolean;
+  gameId: string;
+  hash: string;
+  playerKey: PlayerKey;
+  playerName: string;
+  state: GameState;
+  onBotEnabledChange: (enabled: boolean) => void;
+};
+
+const toolLinks = [
+  { label: "Icons", href: "#icon-designer" },
+  { label: "Map", href: "#map-editor" }
+] as const;
+
+export function GameTopbar({ botEnabled, gameId, hash, playerKey, playerName, state, onBotEnabledChange }: GameTopbarProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const menuRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const actor = state.pending
+    ? playerTheme[state.pending.playerKey].label
+    : state.winner
+      ? `${playerTheme[state.winner].label} wins`
+      : "None";
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [hash]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!menuRef.current?.contains(target) && !toggleRef.current?.contains(target)) setMenuOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
+
+  async function copyGameId() {
+    if (!gameId) return;
+    await navigator.clipboard.writeText(gameId);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 900);
+  }
+
+  return (
+    <nav className="game-topbar" aria-label="Game navigation">
+      <div className="game-topbar-status" aria-label="Game status">
+        <StatusItem label="Round" value={state.tracks.round} />
+        <StatusItem label="Phase" value={phaseLabel(state.phase)} />
+        <StatusItem label="To act" value={actor} />
+        <StatusItem label={gameBundle.ui.threatLabel} value={state.tracks.threat} />
+      </div>
+
+      <div className="game-topbar-actions">
+        {toolLinks.map(({ label, href }) => {
+          const active = hash === href;
+          return (
+            <a
+              key={href}
+              className={`game-topbar-action${active ? " active" : ""}`}
+              href={href}
+              aria-current={active ? "page" : undefined}
+            >
+              {label}
+            </a>
+          );
+        })}
+
+        <div className="game-menu">
+          <button
+            ref={toggleRef}
+            type="button"
+            className="game-topbar-action"
+            aria-haspopup="dialog"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            Game
+          </button>
+
+          {menuOpen && (
+            <section ref={menuRef} className="session-menu-popover" aria-label="Game session details">
+              <header>
+                <strong>Game session</strong>
+                <button className="session-menu-close" type="button" aria-label="Close game session details" onClick={() => setMenuOpen(false)}>×</button>
+              </header>
+              <DetailRow label="Player" value={playerName} />
+              <DetailRow label="House" value={playerTheme[playerKey].label} />
+              <div className="session-detail-row session-id-row">
+                <span>Game ID</span>
+                <code>{gameId || "—"}</code>
+                <button type="button" disabled={!gameId} onClick={() => void copyGameId()}>{copied ? "Copied" : "Copy"}</button>
+              </div>
+              <label className="session-ai-toggle">
+                <input type="checkbox" checked={botEnabled} onChange={(event) => onBotEnabledChange(event.target.checked)} />
+                <span>AI pilot</span>
+              </label>
+            </section>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+function StatusItem({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="session-detail-row">
+      <span>{label}</span>
+      <strong>{value || "—"}</strong>
+    </div>
+  );
+}
+
+function phaseLabel(phase: GameState["phase"]) {
+  return phase.replace(/^\\w/, (letter) => letter.toUpperCase());
+}
+''')
+
+topbar_css_path.write_text('''.game-topbar {
+  --game-topbar-control-height: 30px;
+  position: sticky;
+  z-index: 80;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 42px;
+  margin-bottom: 4px;
+  padding: 6px 10px;
+  border: 1px solid rgba(232, 211, 173, 0.18);
+  border-radius: 8px;
+  background: rgba(11, 16, 19, 0.97);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+}
+
+.game-topbar-status {
+  display: inline-flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 680px;
+  height: var(--game-topbar-control-height);
+  overflow: hidden;
+  border: 1px solid rgba(232, 211, 173, 0.2);
+  border-radius: 8px;
+  background: rgba(18, 23, 26, 0.9);
+}
+
+.game-topbar-status > div {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
+  height: 100%;
+  padding: 0 9px;
+  white-space: nowrap;
+}
+
+.game-topbar-status > div + div {
+  border-left: 1px solid rgba(232, 211, 173, 0.14);
+}
+
+.game-topbar-status span {
+  color: #a9967e;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.game-topbar-status strong {
+  overflow: hidden;
+  color: #f4e7d0;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  text-overflow: ellipsis;
+}
+
+.game-topbar-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 6px;
+  height: var(--game-topbar-control-height);
+}
+
+.game-topbar-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 0;
+  height: var(--game-topbar-control-height);
+  min-height: var(--game-topbar-control-height);
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid rgba(232, 211, 173, 0.28);
+  border-radius: 8px;
+  background: rgba(29, 35, 39, 0.9);
+  box-shadow: none;
+  color: #f4e7d0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.game-topbar-action:hover,
+.game-topbar-action:focus-visible,
+.game-topbar-action.active,
+.game-topbar-action[aria-expanded="true"] {
+  border-color: rgba(244, 212, 143, 0.72);
+  background: rgba(43, 50, 54, 0.96);
+}
+
+.game-topbar-action:hover {
+  transform: translateY(-1px);
+}
+
+.game-menu {
+  position: relative;
+  height: var(--game-topbar-control-height);
+}
+
+.session-menu-popover {
+  position: absolute;
+  z-index: 82;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(330px, calc(100vw - 20px));
+  border: 1px solid rgba(232, 211, 173, 0.32);
+  border-radius: 10px;
+  background: rgba(12, 18, 21, 0.98);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.58);
+  color: #f4e7d0;
+  padding: 10px;
+}
+
+.session-menu-popover header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.session-menu-popover header strong {
+  font-size: 14px;
+}
+
+.session-menu-close {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 2px 8px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.session-detail-row {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  border-top: 1px solid rgba(232, 211, 173, 0.12);
+  padding: 6px 2px;
+}
+
+.session-detail-row > span {
+  color: #bba88e;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.session-detail-row > strong,
+.session-detail-row > code {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-id-row {
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+}
+
+.session-id-row button {
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.session-ai-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  border-top: 1px solid rgba(232, 211, 173, 0.12);
+  padding: 8px 2px 2px;
+  color: #d6c1a2;
+  font-size: 12px;
+  text-transform: none;
+}
+
+.session-ai-toggle input {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 760px) {
+  .game-topbar {
+    gap: 6px;
+    padding-inline: 6px;
+  }
+
+  .game-topbar-status > div {
+    gap: 0;
+    padding-inline: 7px;
+  }
+
+  .game-topbar-status span {
+    display: none;
+  }
+
+  .game-topbar-actions {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 560px) {
+  .game-topbar {
+    --game-topbar-control-height: 28px;
+    min-height: 38px;
+    padding: 4px;
+  }
+
+  .game-topbar-status > div {
+    padding-inline: 6px;
+  }
+
+  .game-topbar-action {
+    padding-inline: 8px;
+  }
+
+  .session-menu-popover {
+    right: -2px;
+    width: min(300px, calc(100vw - 8px));
+  }
+}
+''')
+
+if old_session_path.exists():
+    old_session_path.unlink()
