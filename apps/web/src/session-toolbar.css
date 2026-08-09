@@ -1,0 +1,125 @@
+.game-started .toolbar.session-toolbar-compact {
+  position: sticky;
+  z-index: 70;
+  top: 0;
+  min-height: 0;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-bottom: 3px;
+  padding: 4px 6px;
+  background: rgba(11, 16, 19, 0.96);
+}
+
+.game-started .toolbar.session-toolbar-compact > label {
+  display: none !important;
+}
+
+.game-started .toolbar.session-toolbar-compact .started-tools {
+  margin-left: auto;
+  gap: 4px;
+}
+
+.game-started .toolbar.session-toolbar-compact .session-menu-toggle,
+.game-started .toolbar.session-toolbar-compact .compact-tool-link {
+  min-height: 30px;
+  padding: 5px 9px;
+  font-size: 12px;
+}
+
+.session-menu-popover {
+  position: fixed;
+  z-index: 1200;
+  width: min(330px, calc(100vw - 12px));
+  border: 1px solid rgba(232, 211, 173, 0.32);
+  border-radius: 10px;
+  background: rgba(12, 18, 21, 0.98);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.58);
+  color: #f4e7d0;
+  padding: 10px;
+}
+
+.session-menu-popover[hidden] {
+  display: none !important;
+}
+
+.session-menu-popover header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.session-menu-popover header strong {
+  font-size: 14px;
+}
+
+.session-menu-close {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 2px 8px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.session-detail-row {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  border-top: 1px solid rgba(232, 211, 173, 0.12);
+  padding: 6px 2px;
+}
+
+.session-detail-row > span {
+  color: #bba88e;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.session-detail-row > strong,
+.session-detail-row > code {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-id-row {
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+}
+
+.session-id-row button {
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.session-ai-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  border-top: 1px solid rgba(232, 211, 173, 0.12);
+  padding: 8px 2px 2px;
+  color: #d6c1a2;
+  font-size: 12px;
+}
+
+.session-ai-toggle input {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 560px) {
+  .game-started .toolbar.session-toolbar-compact {
+    padding: 3px 4px;
+  }
+
+  .session-menu-popover {
+    width: min(300px, calc(100vw - 8px));
+  }
+}
