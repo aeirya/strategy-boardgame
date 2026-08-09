@@ -225,7 +225,7 @@ label {
 .layout {
   align-items: flex-start;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
+  grid-template-columns: minmax(0, 1fr) clamp(248px, 18vw, 282px);
   gap: 6px;
 }
 
@@ -1584,9 +1584,18 @@ label {
 }
 
 .side-panel {
+  position: sticky;
+  top: 48px;
   display: grid;
-  width: 220px;
+  align-self: start;
+  align-content: start;
+  width: 100%;
+  max-height: calc(100dvh - 56px);
   gap: 7px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 2px;
+  scrollbar-width: thin;
 }
 
 .panel,
@@ -1613,6 +1622,36 @@ label {
   padding: 9px 10px;
   font-size: 13px;
   line-height: 1.35;
+}
+
+.command-assist {
+  border-top: 1px solid rgba(232, 211, 173, 0.12);
+  padding-top: 6px;
+}
+
+.command-assist summary {
+  cursor: pointer;
+  color: #ad9b80;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.command-assist[open] {
+  display: grid;
+  gap: 6px;
+}
+
+.command-assist button {
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 8px;
+  box-shadow: none;
+  font-size: 11px;
+}
+
+.side-panel .compact-panel:not([open]) {
+  box-shadow: none;
+  padding-block: 7px;
 }
 
 .compact-side-panel {
@@ -1775,14 +1814,37 @@ summary.panel-heading::-webkit-details-marker {
   margin-bottom: 8px;
 }
 
-.compact-panel summary h2::after {
-  content: "+";
-  float: right;
-  color: #d7b66f;
+.compact-panel summary.panel-heading {
+  grid-template-areas:
+    "eyebrow marker"
+    "title marker";
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 8px;
 }
 
-.compact-panel[open] summary h2::after {
-  content: "-";
+.compact-panel summary.panel-heading .eyebrow {
+  grid-area: eyebrow;
+}
+
+.compact-panel summary.panel-heading h2 {
+  grid-area: title;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compact-panel summary.panel-heading::after {
+  grid-area: marker;
+  content: "+";
+  color: #d7b66f;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.compact-panel[open] summary.panel-heading::after {
+  content: "−";
 }
 
 .playerKey-list,

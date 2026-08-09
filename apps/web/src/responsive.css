@@ -179,10 +179,26 @@
   }
 
   .side-panel {
+    position: static;
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
     width: 100%;
+    max-height: none;
     min-width: 0;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 4px;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .side-panel > .current-command {
+    flex: 1 1 280px;
+  }
+
+  .side-panel > .compact-panel {
+    flex: 1 1 210px;
+    max-width: 320px;
   }
 
   .panel,
@@ -317,7 +333,13 @@
   }
 
   .side-panel {
+    display: grid;
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side-panel > .current-command,
+  .side-panel > .compact-panel {
+    max-width: none;
   }
 
   .map-svg {

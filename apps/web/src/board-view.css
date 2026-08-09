@@ -2,7 +2,8 @@
  *
  * Explore mode remains the normal pannable/zoomable board. Fit mode crops the
  * SVG viewport to the actual territory bounds, preserves the board aspect
- * ratio, freezes camera navigation, and moves tool shelves below the map.
+ * ratio and freezes camera navigation. The gameplay sidebar keeps its normal
+ * desktop position so switching camera modes does not rearrange the whole UI.
  */
 
 .board-view-toggle {
@@ -29,17 +30,6 @@
   border-color: rgba(244, 212, 143, 0.82);
   background: rgba(132, 91, 32, 0.92);
   color: #fff0c8;
-}
-
-.fit-board-view .layout {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.fit-board-view .side-panel {
-  width: 100%;
-  min-width: 0;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 6px;
 }
 
 .fit-board-view .war-table,
