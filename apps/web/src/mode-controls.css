@@ -18,6 +18,10 @@
   font: 600 12px/1.2 system-ui, sans-serif;
 }
 
+.game-mode-control[hidden] {
+  display: none !important;
+}
+
 .game-mode-control > span {
   color: #e7bb68;
   text-transform: uppercase;

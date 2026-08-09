@@ -29,12 +29,7 @@
 .session-menu-toggle-external {
   position: fixed;
   z-index: 1201;
-  border: 1px solid rgba(232, 211, 173, 0.28);
-  border-radius: 8px;
-  background: rgba(29, 35, 39, 0.96);
-  color: #f4e7d0;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
-  font-weight: 800;
+  margin: 0;
 }
 
 .session-menu-toggle-external[hidden] {
