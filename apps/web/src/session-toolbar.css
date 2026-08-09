@@ -1,3 +1,9 @@
+body:has(main.game-started) {
+  --game-topbar-height: 30px;
+  --game-topbar-inset: 10px;
+  --game-topbar-gap: 6px;
+}
+
 .game-started .toolbar {
   position: sticky;
   z-index: 70;
@@ -15,15 +21,72 @@
   display: none !important;
 }
 
+/*
+ * In-game status belongs to the top bar, not a second row. Keep it as one
+ * compact group so adding another status item later does not require layout
+ * changes elsewhere in the board view.
+ */
+.game-started .status-strip {
+  position: fixed;
+  z-index: 79;
+  top: var(--game-topbar-inset);
+  left: var(--game-topbar-inset);
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0;
+  width: auto;
+  max-width: 60vw;
+  height: var(--game-topbar-height);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(232, 211, 173, 0.2);
+  border-radius: 8px;
+  background: rgba(18, 23, 26, 0.9);
+}
+
+.game-started .status-strip > div {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  width: auto;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0 9px;
+  white-space: nowrap;
+}
+
+.game-started .status-strip > div + div {
+  border-left: 1px solid rgba(232, 211, 173, 0.14);
+}
+
+.game-started .status-strip span {
+  color: #a9967e;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.game-started .status-strip strong {
+  display: inline;
+  color: #f4e7d0;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
 .game-topbar-actions {
   position: fixed;
   z-index: 80;
-  top: 10px;
-  right: 10px;
+  top: var(--game-topbar-inset, 10px);
+  right: var(--game-topbar-inset, 10px);
   display: none;
   align-items: center;
-  gap: 6px;
-  height: 30px;
+  gap: var(--game-topbar-gap, 6px);
+  height: var(--game-topbar-height, 30px);
 }
 
 body:has(main.game-started) .game-topbar-actions {
@@ -36,8 +99,8 @@ body:has(main.game-started) .game-topbar-actions {
   justify-content: center;
   width: auto;
   min-width: 0;
-  height: 30px;
-  min-height: 30px;
+  height: var(--game-topbar-height, 30px);
+  min-height: var(--game-topbar-height, 30px);
   margin: 0;
   padding: 0 10px;
   border: 1px solid rgba(232, 211, 173, 0.28);
@@ -158,17 +221,38 @@ body:not(:has(main.game-started)) .session-menu-popover {
   height: 18px;
 }
 
+@media (max-width: 760px) {
+  .game-started .status-strip {
+    max-width: 54vw;
+  }
+
+  .game-started .status-strip > div {
+    gap: 0;
+    padding-inline: 7px;
+  }
+
+  .game-started .status-strip span {
+    display: none;
+  }
+}
+
 @media (max-width: 560px) {
+  body:has(main.game-started) {
+    --game-topbar-inset: 8px;
+    --game-topbar-gap: 4px;
+  }
+
   .game-started .toolbar {
     min-height: 38px;
     padding: 3px 4px;
   }
 
-  .game-topbar-actions {
-    top: 8px;
-    right: 8px;
-    gap: 4px;
-    height: 30px;
+  .game-started .status-strip {
+    max-width: 48vw;
+  }
+
+  .game-started .status-strip > div {
+    padding-inline: 6px;
   }
 
   .game-topbar-action {
