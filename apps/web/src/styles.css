@@ -178,41 +178,6 @@ label {
   padding: 10px;
 }
 
-.game-started .toolbar {
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-  padding: 6px 8px;
-}
-
-.game-started .toolbar label:not(.toggle) {
-  min-width: 116px;
-  gap: 3px;
-  font-size: 0;
-}
-
-.game-started .toolbar input,
-.game-started .toolbar select {
-  min-height: 32px;
-  padding: 7px 9px;
-  font-size: 12px;
-}
-
-.game-started .toolbar button {
-  min-height: 32px;
-  padding: 7px 10px;
-}
-
-.game-started .toolbar .toggle {
-  padding-bottom: 0;
-  font-size: 11px;
-}
-
-.started-tools {
-  display: flex;
-  gap: 6px;
-  margin-left: auto;
-}
 
 .toggle {
   display: flex;
