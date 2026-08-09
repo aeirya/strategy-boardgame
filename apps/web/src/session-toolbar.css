@@ -10,52 +10,67 @@
   background: rgba(11, 16, 19, 0.96);
 }
 
-.game-started .toolbar > label {
+.game-started .toolbar > label,
+.game-started .toolbar .started-tools {
   display: none !important;
 }
 
-.game-started .toolbar .started-tools {
-  margin-left: auto;
-  margin-right: 58px;
-  gap: 4px;
-}
-
-/* compact-tool-link is full-width in side panels; toolbar links must be intrinsic */
-.game-started .toolbar .compact-tool-link {
-  width: auto;
-  min-height: 30px;
-  margin-top: 0;
-  padding: 5px 9px;
-  font-size: 12px;
-}
-
-.session-menu-toggle-external {
+.game-topbar-actions {
   position: fixed;
   z-index: 80;
   top: 10px;
   right: 10px;
   display: none;
   align-items: center;
-  justify-content: center;
-  min-width: 52px;
-  min-height: 30px;
-  width: auto;
-  margin: 0;
-  padding: 5px 9px;
-  background: rgba(29, 35, 39, 0.9);
-  box-shadow: none;
-  font-size: 12px;
-  font-weight: 800;
+  gap: 6px;
+  height: 30px;
 }
 
-body:has(main.game-started) .session-menu-toggle-external {
+body:has(main.game-started) .game-topbar-actions {
+  display: flex;
+}
+
+.game-topbar-action {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 0;
+  height: 30px;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid rgba(232, 211, 173, 0.28);
+  border-radius: 8px;
+  background: rgba(29, 35, 39, 0.9);
+  box-shadow: none;
+  color: #f4e7d0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.game-topbar-action:hover,
+.game-topbar-action:focus-visible,
+.game-topbar-action.active,
+.game-topbar-action[aria-expanded="true"] {
+  border-color: rgba(244, 212, 143, 0.72);
+  background: rgba(43, 50, 54, 0.96);
+}
+
+.game-topbar-action:hover {
+  transform: translateY(-1px);
 }
 
 .session-menu-popover {
   position: fixed;
   z-index: 81;
-  top: 44px;
+  top: 46px;
   right: 10px;
   width: min(330px, calc(100vw - 20px));
   border: 1px solid rgba(232, 211, 173, 0.32);
@@ -149,18 +164,19 @@ body:not(:has(main.game-started)) .session-menu-popover {
     padding: 3px 4px;
   }
 
-  .game-started .toolbar .started-tools {
-    margin-right: 54px;
-  }
-
-  .session-menu-toggle-external {
+  .game-topbar-actions {
     top: 8px;
     right: 8px;
-    min-width: 48px;
+    gap: 4px;
+    height: 30px;
+  }
+
+  .game-topbar-action {
+    padding-inline: 8px;
   }
 
   .session-menu-popover {
-    top: 42px;
+    top: 44px;
     right: 4px;
     width: min(300px, calc(100vw - 8px));
   }
