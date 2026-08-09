@@ -146,7 +146,7 @@ window.addEventListener("resize", () => {
 });
 
 installedLandscape.addEventListener("change", (event) => {
-  if (!savedMode && event.matches) {
+  if (!window.localStorage.getItem(storageKey) && event.matches) {
     mode = "fit";
     applyMode();
   }
