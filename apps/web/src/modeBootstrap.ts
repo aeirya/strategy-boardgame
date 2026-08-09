@@ -1,4 +1,4 @@
-import { gameBundle, standardGameModeId, type Order } from "@tabletop/rules";
+import { gameBundle, standardGameModeId, type GameState, type Order } from "@tabletop/rules";
 import "./mode-controls.css";
 
 const params = new URLSearchParams(window.location.search);
@@ -72,8 +72,29 @@ function installModeFetchAdapter() {
       }
     }
 
-    return previousFetch(nextInput, nextInit);
+    const response = await previousFetch(nextInput, nextInit);
+    void syncModeControlVisibility(response);
+    return response;
   };
+}
+
+async function syncModeControlVisibility(response: Response) {
+  if (!response.ok) return;
+  try {
+    const payload = await response.clone().json() as unknown;
+    const state = gameStateFromPayload(payload);
+    if (!state) return;
+    document.getElementById("game-mode-control")?.toggleAttribute("hidden", state.phase !== "lobby");
+  } catch {
+    // Ignore non-state JSON responses.
+  }
+}
+
+function gameStateFromPayload(payload: unknown): GameState | undefined {
+  if (!payload || typeof payload !== "object") return undefined;
+  const candidate = "state" in payload ? (payload as { state?: unknown }).state : payload;
+  if (!candidate || typeof candidate !== "object" || !("phase" in candidate)) return undefined;
+  return candidate as GameState;
 }
 
 function normalizeBotOrders(orders: Record<string, Order>): Record<string, Order> {
