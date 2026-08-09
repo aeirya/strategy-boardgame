@@ -4,7 +4,7 @@ const root = document.getElementById("root");
 const button = document.createElement("button");
 button.type = "button";
 button.id = "session-menu-toggle";
-button.className = "session-menu-toggle-external";
+button.className = "tool-link compact-tool-link session-menu-toggle-external";
 button.textContent = "Game";
 button.hidden = true;
 button.setAttribute("aria-haspopup", "dialog");
@@ -17,6 +17,12 @@ popover.className = "session-menu-popover";
 popover.hidden = true;
 popover.setAttribute("aria-label", "Game session details");
 document.body.append(popover);
+
+let observedMain: HTMLElement | null = null;
+const mainObserver = new MutationObserver(sync);
+const rootObserver = root ? new MutationObserver(bindMain) : null;
+rootObserver?.observe(root!, { childList: true });
+bindMain();
 
 button.addEventListener("click", () => {
   if (popover.hidden) openPopover();
@@ -34,16 +40,17 @@ document.addEventListener("pointerdown", (event) => {
   if (!popover.contains(target) && !button.contains(target)) closePopover();
 });
 
-if (root) {
-  const observer = new MutationObserver(sync);
-  observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+function bindMain() {
+  const nextMain = root?.querySelector<HTMLElement>("main") ?? null;
+  if (nextMain === observedMain) return;
+  mainObserver.disconnect();
+  observedMain = nextMain;
+  if (observedMain) mainObserver.observe(observedMain, { attributes: true, attributeFilter: ["class"] });
+  sync();
 }
 
-sync();
-
 function sync() {
-  const main = root?.querySelector("main");
-  const started = main?.classList.contains("game-started") ?? false;
+  const started = observedMain?.classList.contains("game-started") ?? false;
   button.hidden = !started;
   document.getElementById("game-mode-control")?.toggleAttribute("hidden", started);
 
@@ -61,15 +68,17 @@ function toolbar() {
 }
 
 function positionButton() {
-  const tools = root?.querySelector<HTMLElement>("main.game-started .started-tools");
-  if (!tools) {
+  const firstTool = root?.querySelector<HTMLElement>("main.game-started .started-tools .compact-tool-link");
+  if (!firstTool) {
     button.style.top = "8px";
     button.style.right = "8px";
+    button.style.height = "";
     return;
   }
-  const bounds = tools.getBoundingClientRect();
-  button.style.top = `${Math.max(4, bounds.top)}px`;
+  const bounds = firstTool.getBoundingClientRect();
+  button.style.top = `${bounds.top}px`;
   button.style.right = `${Math.max(6, window.innerWidth - bounds.left + 6)}px`;
+  button.style.height = `${bounds.height}px`;
 }
 
 function openPopover() {
