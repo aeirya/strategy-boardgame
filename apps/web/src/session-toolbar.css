@@ -1,61 +1,71 @@
-body:has(main.game-started) {
+.game-topbar {
   --game-topbar-control-height: 30px;
-  --game-topbar-shell-height: 42px;
-  --game-topbar-x: 10px;
-  --game-topbar-y: 6px;
-  --game-topbar-gap: 6px;
-}
-
-/*
- * The old in-game toolbar is still the source for session values used by the
- * Game popover, but it is no longer a second visual navigation bar. Keep one
- * flow-sized spacer so the fixed top bar never covers the board at scroll 0.
- */
-.game-started .toolbar {
-  position: static;
-  z-index: auto;
-  display: block;
-  width: 100%;
-  height: var(--game-topbar-shell-height);
-  min-height: var(--game-topbar-shell-height);
-  margin: 0 0 4px;
-  overflow: visible;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.game-started .toolbar > label,
-.game-started .toolbar .started-tools {
-  display: none !important;
-}
-
-/*
- * One fixed shell owns the visible in-game navigation. Actions are real
- * children of this shell; live React status remains independently rendered but
- * uses the exact same fixed coordinate system on the left.
- */
-.game-topbar-actions {
-  position: fixed;
+  position: sticky;
   z-index: 80;
   top: 0;
-  right: 0;
-  left: 0;
-  display: none;
+  display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: var(--game-topbar-gap, 6px);
-  height: var(--game-topbar-shell-height, 42px);
-  padding: var(--game-topbar-y, 6px) var(--game-topbar-x, 10px);
-  border-bottom: 1px solid rgba(232, 211, 173, 0.18);
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 42px;
+  margin-bottom: 4px;
+  padding: 6px 10px;
+  border: 1px solid rgba(232, 211, 173, 0.18);
+  border-radius: 8px;
   background: rgba(11, 16, 19, 0.97);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
 }
 
-body:has(main.game-started) .game-topbar-actions {
+.game-topbar-status {
+  display: inline-flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 680px;
+  height: var(--game-topbar-control-height);
+  overflow: hidden;
+  border: 1px solid rgba(232, 211, 173, 0.2);
+  border-radius: 8px;
+  background: rgba(18, 23, 26, 0.9);
+}
+
+.game-topbar-status > div {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
+  height: 100%;
+  padding: 0 9px;
+  white-space: nowrap;
+}
+
+.game-topbar-status > div + div {
+  border-left: 1px solid rgba(232, 211, 173, 0.14);
+}
+
+.game-topbar-status span {
+  color: #a9967e;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.game-topbar-status strong {
+  overflow: hidden;
+  color: #f4e7d0;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  text-overflow: ellipsis;
+}
+
+.game-topbar-actions {
   display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 6px;
+  height: var(--game-topbar-control-height);
 }
 
 .game-topbar-action {
@@ -64,8 +74,8 @@ body:has(main.game-started) .game-topbar-actions {
   justify-content: center;
   width: auto;
   min-width: 0;
-  height: var(--game-topbar-control-height, 30px);
-  min-height: var(--game-topbar-control-height, 30px);
+  height: var(--game-topbar-control-height);
+  min-height: var(--game-topbar-control-height);
   margin: 0;
   padding: 0 10px;
   border: 1px solid rgba(232, 211, 173, 0.28);
@@ -95,64 +105,16 @@ body:has(main.game-started) .game-topbar-actions {
   transform: translateY(-1px);
 }
 
-/* Live game status occupies the left side of the same fixed shell. */
-.game-started .status-strip {
-  position: fixed;
-  z-index: 81;
-  top: var(--game-topbar-y, 6px);
-  left: var(--game-topbar-x, 10px);
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 0;
-  width: auto;
-  max-width: min(60vw, calc(100vw - 220px));
-  height: var(--game-topbar-control-height, 30px);
-  margin: 0;
-  overflow: hidden;
-  border: 1px solid rgba(232, 211, 173, 0.2);
-  border-radius: 8px;
-  background: rgba(18, 23, 26, 0.9);
-}
-
-.game-started .status-strip > div {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  width: auto;
-  min-width: 0;
-  height: 100%;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  padding: 0 9px;
-  white-space: nowrap;
-}
-
-.game-started .status-strip > div + div {
-  border-left: 1px solid rgba(232, 211, 173, 0.14);
-}
-
-.game-started .status-strip span {
-  color: #a9967e;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.game-started .status-strip strong {
-  display: inline;
-  color: #f4e7d0;
-  font-size: 12px;
-  font-weight: 900;
-  line-height: 1;
+.game-menu {
+  position: relative;
+  height: var(--game-topbar-control-height);
 }
 
 .session-menu-popover {
-  position: fixed;
+  position: absolute;
   z-index: 82;
-  top: calc(var(--game-topbar-shell-height, 42px) + 4px);
-  right: var(--game-topbar-x, 10px);
+  top: calc(100% + 8px);
+  right: 0;
   width: min(330px, calc(100vw - 20px));
   border: 1px solid rgba(232, 211, 173, 0.32);
   border-radius: 10px;
@@ -160,11 +122,6 @@ body:has(main.game-started) .game-topbar-actions {
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.58);
   color: #f4e7d0;
   padding: 10px;
-}
-
-.session-menu-popover[hidden],
-body:not(:has(main.game-started)) .session-menu-popover {
-  display: none !important;
 }
 
 .session-menu-popover header {
@@ -232,6 +189,7 @@ body:not(:has(main.game-started)) .session-menu-popover {
   padding: 8px 2px 2px;
   color: #d6c1a2;
   font-size: 12px;
+  text-transform: none;
 }
 
 .session-ai-toggle input {
@@ -240,33 +198,33 @@ body:not(:has(main.game-started)) .session-menu-popover {
 }
 
 @media (max-width: 760px) {
-  .game-started .status-strip {
-    max-width: min(54vw, calc(100vw - 190px));
+  .game-topbar {
+    gap: 6px;
+    padding-inline: 6px;
   }
 
-  .game-started .status-strip > div {
+  .game-topbar-status > div {
     gap: 0;
     padding-inline: 7px;
   }
 
-  .game-started .status-strip span {
+  .game-topbar-status span {
     display: none;
+  }
+
+  .game-topbar-actions {
+    gap: 4px;
   }
 }
 
 @media (max-width: 560px) {
-  body:has(main.game-started) {
-    --game-topbar-shell-height: 38px;
-    --game-topbar-x: 6px;
-    --game-topbar-y: 4px;
-    --game-topbar-gap: 4px;
+  .game-topbar {
+    --game-topbar-control-height: 28px;
+    min-height: 38px;
+    padding: 4px;
   }
 
-  .game-started .status-strip {
-    max-width: min(46vw, calc(100vw - 168px));
-  }
-
-  .game-started .status-strip > div {
+  .game-topbar-status > div {
     padding-inline: 6px;
   }
 
@@ -275,7 +233,7 @@ body:not(:has(main.game-started)) .session-menu-popover {
   }
 
   .session-menu-popover {
-    right: 4px;
+    right: -2px;
     width: min(300px, calc(100vw - 8px));
   }
 }

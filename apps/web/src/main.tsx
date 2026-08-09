@@ -21,6 +21,7 @@ import type { CSSProperties, DragEvent, MouseEvent, PointerEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { canUseOrder, commitHistory, countOrder, createHistory, cycleOrder, familyForShortcut, moveOrder, orderFamilies, ordersEqual, placeOrder, redoHistory, removeOrder, remainingFor, undoHistory, type DraftHistory } from "./planningOrders";
 import { editorHexTiles, inspectMapIntegrity, mapTerrainTypes, terrainTheme, visualAreasById, visualMap, type HexTile, type MapPoint, type MapTerrain, type VisualMapArea } from "./visualMap";
+import { GameTopbar } from "./GameTopbar";
 import "./styles.css";
 
 const api = `${window.location.protocol}//${window.location.hostname}:3000`;
@@ -590,39 +591,43 @@ function App() {
         </div>
       </section>}
 
-      <section className="toolbar">
-        <label>
-          Game ID
-          <input value={gameId} onChange={(event) => setGameId(event.target.value)} placeholder="Paste game id" />
-        </label>
-        <label>
-          Name
-          <input value={name} onChange={(event) => setName(event.target.value)} />
-        </label>
-        <label>
-          {gameBundle.ui.playerLabel}
-          <select value={playerKey} onChange={(event) => setPlayerKey(event.target.value as PlayerKey)}>
-            {playerKeys.map((candidate) => <option key={candidate} value={candidate}>{playerTheme[candidate].label}</option>)}
-          </select>
-        </label>
-        {!gameStarted && (
-          <>
-            <button disabled={!gameId || !!me} onClick={() => submit({ type: "join", playerId, name, playerKey })}>Join</button>
-            <button disabled={!me} onClick={() => submit({ type: "ready", playerId, ready: !me?.ready })}>{me?.ready ? "Unready" : "Ready"}</button>
-            <button disabled={!state || state.phase !== "lobby"} onClick={() => submit({ type: "start" })}>Start</button>
-          </>
-        )}
-        <label className="toggle">
-          <input checked={botEnabled} onChange={(event) => setBotEnabled(event.target.checked)} type="checkbox" />
-          AI pilot
-        </label>
-        {gameStarted && (
-          <span className="started-tools">
-            <a className="tool-link compact-tool-link" href="#icon-designer">Icons</a>
-            <a className="tool-link compact-tool-link" href="#map-editor">Map</a>
-          </span>
-        )}
-      </section>
+      {!gameStarted && (
+        <section className="toolbar">
+          <label>
+            Game ID
+            <input value={gameId} onChange={(event) => setGameId(event.target.value)} placeholder="Paste game id" />
+          </label>
+          <label>
+            Name
+            <input value={name} onChange={(event) => setName(event.target.value)} />
+          </label>
+          <label>
+            {gameBundle.ui.playerLabel}
+            <select value={playerKey} onChange={(event) => setPlayerKey(event.target.value as PlayerKey)}>
+              {playerKeys.map((candidate) => <option key={candidate} value={candidate}>{playerTheme[candidate].label}</option>)}
+            </select>
+          </label>
+          <button disabled={!gameId || !!me} onClick={() => submit({ type: "join", playerId, name, playerKey })}>Join</button>
+          <button disabled={!me} onClick={() => submit({ type: "ready", playerId, ready: !me?.ready })}>{me?.ready ? "Unready" : "Ready"}</button>
+          <button disabled={!state || state.phase !== "lobby"} onClick={() => submit({ type: "start" })}>Start</button>
+          <label className="toggle">
+            <input checked={botEnabled} onChange={(event) => setBotEnabled(event.target.checked)} type="checkbox" />
+            AI pilot
+          </label>
+        </section>
+      )}
+
+      {gameStarted && effectiveState && (
+        <GameTopbar
+          botEnabled={botEnabled}
+          gameId={gameId}
+          hash={hash}
+          playerKey={me?.playerKey ?? playerKey}
+          playerName={me?.name ?? name}
+          state={effectiveState}
+          onBotEnabledChange={setBotEnabled}
+        />
+      )}
 
       {showIconDesigner && <IconDesigner onClose={() => {
         window.history.replaceState(null, "", window.location.pathname + window.location.search);
@@ -636,24 +641,26 @@ function App() {
 
       {!showMapEditor && effectiveState ? (
         <>
-          <section className="status-strip">
-            <div>
-              <span>Round</span>
-              <strong>{effectiveState.tracks.round}</strong>
-            </div>
-            <div>
-              <span>Phase</span>
-              <strong>{phaseLabel(effectiveState.phase)}</strong>
-            </div>
-            <div>
-              <span>To act</span>
-              <strong>{effectiveState.pending ? playerTheme[effectiveState.pending.playerKey].label : effectiveState.winner ? `${playerTheme[effectiveState.winner].label} wins` : "None"}</strong>
-            </div>
-            <div>
-              <span>{gameBundle.ui.threatLabel}</span>
-              <strong>{effectiveState.tracks.threat}</strong>
-            </div>
-          </section>
+          {!gameStarted && (
+            <section className="status-strip">
+              <div>
+                <span>Round</span>
+                <strong>{effectiveState.tracks.round}</strong>
+              </div>
+              <div>
+                <span>Phase</span>
+                <strong>{phaseLabel(effectiveState.phase)}</strong>
+              </div>
+              <div>
+                <span>To act</span>
+                <strong>{effectiveState.pending ? playerTheme[effectiveState.pending.playerKey].label : effectiveState.winner ? `${playerTheme[effectiveState.winner].label} wins` : "None"}</strong>
+              </div>
+              <div>
+                <span>{gameBundle.ui.threatLabel}</span>
+                <strong>{effectiveState.tracks.threat}</strong>
+              </div>
+            </section>
+          )}
 
           <div className="layout">
             <section className="war-table" aria-label="Game board">
