@@ -1,6 +1,6 @@
 .game-mode-control {
   position: fixed;
-  z-index: 10020;
+  z-index: 90;
   left: 18px;
   bottom: 16px;
   display: grid;
@@ -18,7 +18,8 @@
   font: 600 12px/1.2 system-ui, sans-serif;
 }
 
-.game-mode-control[hidden] {
+.game-mode-control[hidden],
+body:has(main.game-started) .game-mode-control {
   display: none !important;
 }
 
