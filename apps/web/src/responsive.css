@@ -53,58 +53,9 @@
     font-size: 12px;
   }
 
-  /* Once a game starts, setup controls should not consume several rows before
-     the board. Keep them available in a compact horizontally-scrollable rail. */
-  .game-started .toolbar {
-    position: sticky;
-    z-index: 60;
-    top: 0;
-    display: flex;
-    align-items: center !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap;
-    gap: 4px;
-    margin-bottom: 3px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    padding: 4px;
-    background: rgba(11, 16, 19, 0.96);
-    scrollbar-width: thin;
-  }
-
-  .game-started .toolbar label:not(.toggle) {
-    flex: 0 0 108px;
-    width: 108px;
-    min-width: 108px;
-  }
-
-  .game-started .toolbar input,
-  .game-started .toolbar select {
-    width: 100%;
-    min-width: 0;
-    min-height: 30px;
-    padding: 6px 7px;
-  }
-
-  .game-started .toolbar .toggle {
-    flex: 0 0 auto;
-    padding: 0 5px;
-    white-space: nowrap;
-  }
-
-  .game-started .started-tools {
-    flex: 0 0 auto;
-    margin-left: 0;
-  }
-
-  .game-started .compact-tool-link {
-    width: auto;
-    margin-top: 0;
-    padding: 6px 8px;
-  }
-
-  /* The status cards become a one-line rail instead of taking two rows. */
-  .status-strip {
+  /* Pre-game status keeps the older horizontal rail. In-game status is owned
+     by session-toolbar.css and must not inherit these layout rules. */
+  main:not(.game-started) .status-strip {
     flex-wrap: nowrap;
     gap: 4px;
     margin-bottom: 3px;
@@ -113,18 +64,18 @@
     scrollbar-width: thin;
   }
 
-  .status-strip > div {
+  main:not(.game-started) .status-strip > div {
     flex: 0 0 116px;
     width: 116px;
     min-width: 0;
     padding: 5px 7px;
   }
 
-  .status-strip span {
+  main:not(.game-started) .status-strip span {
     font-size: 10px;
   }
 
-  .status-strip strong {
+  main:not(.game-started) .status-strip strong {
     overflow: hidden;
     font-size: 13px;
     text-overflow: ellipsis;
@@ -360,7 +311,7 @@
     min-width: 0;
   }
 
-  .status-strip > div {
+  main:not(.game-started) .status-strip > div {
     flex-basis: 104px;
     width: 104px;
   }
@@ -436,11 +387,7 @@
     min-height: 0 !important;
   }
 
-  .game-started .toolbar {
-    margin-bottom: 2px;
-  }
-
-  .status-strip {
+  main:not(.game-started) .status-strip {
     margin-bottom: 2px;
   }
 
