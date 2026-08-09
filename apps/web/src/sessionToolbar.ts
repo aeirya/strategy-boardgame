@@ -1,5 +1,16 @@
 import "./session-toolbar.css";
 
+const root = document.getElementById("root");
+const button = document.createElement("button");
+button.type = "button";
+button.id = "session-menu-toggle";
+button.className = "session-menu-toggle-external";
+button.textContent = "Game";
+button.hidden = true;
+button.setAttribute("aria-haspopup", "dialog");
+button.setAttribute("aria-expanded", "false");
+document.body.append(button);
+
 const popover = document.createElement("section");
 popover.id = "session-menu-popover";
 popover.className = "session-menu-popover";
@@ -7,61 +18,62 @@ popover.hidden = true;
 popover.setAttribute("aria-label", "Game session details");
 document.body.append(popover);
 
-let anchor: HTMLButtonElement | null = null;
+button.addEventListener("click", () => {
+  if (popover.hidden) openPopover();
+  else closePopover();
+});
 
-syncSessionToolbar();
-const observer = new MutationObserver(syncSessionToolbar);
-observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
-
-window.addEventListener("resize", positionPopover);
-window.addEventListener("scroll", positionPopover, true);
+window.addEventListener("resize", sync);
+window.addEventListener("scroll", sync, true);
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closePopover();
 });
 document.addEventListener("pointerdown", (event) => {
   if (popover.hidden) return;
   const target = event.target as Node;
-  if (!popover.contains(target) && !anchor?.contains(target)) closePopover();
+  if (!popover.contains(target) && !button.contains(target)) closePopover();
 });
 
-function syncSessionToolbar() {
-  const main = document.querySelector("main");
+if (root) {
+  const observer = new MutationObserver(sync);
+  observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+}
+
+sync();
+
+function sync() {
+  const main = root?.querySelector("main");
   const started = main?.classList.contains("game-started") ?? false;
+  button.hidden = !started;
   document.getElementById("game-mode-control")?.toggleAttribute("hidden", started);
 
-  const toolbar = main?.querySelector<HTMLElement>(".toolbar");
-  if (!started || !toolbar) {
-    toolbar?.classList.remove("session-toolbar-compact");
+  if (!started) {
     closePopover();
     return;
   }
 
-  toolbar.classList.add("session-toolbar-compact");
-  const tools = toolbar.querySelector<HTMLElement>(".started-tools");
-  if (!tools) return;
-
-  let button = tools.querySelector<HTMLButtonElement>(".session-menu-toggle");
-  if (!button) {
-    button = document.createElement("button");
-    button.type = "button";
-    button.className = "session-menu-toggle";
-    button.textContent = "Game";
-    button.setAttribute("aria-haspopup", "dialog");
-    button.setAttribute("aria-expanded", "false");
-    button.addEventListener("click", () => {
-      if (popover.hidden) openPopover(toolbar, button!);
-      else closePopover();
-    });
-    tools.prepend(button);
-  }
-
-  anchor = button;
-  if (!popover.hidden) renderPopover(toolbar);
+  positionButton();
+  if (!popover.hidden) positionPopover();
 }
 
-function openPopover(toolbar: HTMLElement, button: HTMLButtonElement) {
-  anchor = button;
-  renderPopover(toolbar);
+function toolbar() {
+  return root?.querySelector<HTMLElement>("main.game-started .toolbar") ?? null;
+}
+
+function positionButton() {
+  const tools = root?.querySelector<HTMLElement>("main.game-started .started-tools");
+  if (!tools) {
+    button.style.top = "8px";
+    button.style.right = "8px";
+    return;
+  }
+  const bounds = tools.getBoundingClientRect();
+  button.style.top = `${Math.max(4, bounds.top)}px`;
+  button.style.right = `${Math.max(6, window.innerWidth - bounds.left + 6)}px`;
+}
+
+function openPopover() {
+  renderPopover();
   popover.hidden = false;
   button.setAttribute("aria-expanded", "true");
   positionPopover();
@@ -69,23 +81,26 @@ function openPopover(toolbar: HTMLElement, button: HTMLButtonElement) {
 
 function closePopover() {
   popover.hidden = true;
-  anchor?.setAttribute("aria-expanded", "false");
+  button.setAttribute("aria-expanded", "false");
 }
 
 function positionPopover() {
-  if (popover.hidden || !anchor) return;
-  const bounds = anchor.getBoundingClientRect();
+  if (popover.hidden) return;
+  const bounds = button.getBoundingClientRect();
   popover.style.top = `${Math.min(window.innerHeight - 12, bounds.bottom + 6)}px`;
   popover.style.right = `${Math.max(6, window.innerWidth - bounds.right)}px`;
 }
 
-function renderPopover(toolbar: HTMLElement) {
-  const textInputs = toolbar.querySelectorAll<HTMLInputElement>('input:not([type="checkbox"])');
+function renderPopover() {
+  const bar = toolbar();
+  if (!bar) return;
+
+  const textInputs = bar.querySelectorAll<HTMLInputElement>('input:not([type="checkbox"])');
   const gameId = textInputs[0]?.value ?? "";
   const playerName = textInputs[1]?.value ?? "Player";
-  const houseSelect = toolbar.querySelector<HTMLSelectElement>("select");
+  const houseSelect = bar.querySelector<HTMLSelectElement>("select");
   const house = houseSelect?.selectedOptions[0]?.textContent?.trim() ?? "—";
-  const aiToggle = toolbar.querySelector<HTMLInputElement>('label.toggle input[type="checkbox"]');
+  const aiToggle = bar.querySelector<HTMLInputElement>('label.toggle input[type="checkbox"]');
 
   popover.replaceChildren();
 
