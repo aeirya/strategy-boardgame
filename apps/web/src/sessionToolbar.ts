@@ -1,14 +1,15 @@
 import "./session-toolbar.css";
 
 const root = document.getElementById("root");
+
 const button = document.createElement("button");
 button.type = "button";
 button.id = "session-menu-toggle";
-button.className = "tool-link compact-tool-link session-menu-toggle-external";
+button.className = "session-menu-toggle-external";
 button.textContent = "Game";
-button.hidden = true;
 button.setAttribute("aria-haspopup", "dialog");
 button.setAttribute("aria-expanded", "false");
+button.setAttribute("aria-controls", "session-menu-popover");
 document.body.append(button);
 
 const popover = document.createElement("section");
@@ -18,86 +19,35 @@ popover.hidden = true;
 popover.setAttribute("aria-label", "Game session details");
 document.body.append(popover);
 
-let observedMain: HTMLElement | null = null;
-const mainObserver = new MutationObserver(sync);
-const rootObserver = root ? new MutationObserver(bindMain) : null;
-rootObserver?.observe(root!, { childList: true });
-bindMain();
-
 button.addEventListener("click", () => {
   if (popover.hidden) openPopover();
   else closePopover();
 });
 
-window.addEventListener("resize", sync);
-window.addEventListener("scroll", sync, true);
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closePopover();
 });
+
 document.addEventListener("pointerdown", (event) => {
   if (popover.hidden) return;
   const target = event.target as Node;
   if (!popover.contains(target) && !button.contains(target)) closePopover();
 });
 
-function bindMain() {
-  const nextMain = root?.querySelector<HTMLElement>("main") ?? null;
-  if (nextMain === observedMain) return;
-  mainObserver.disconnect();
-  observedMain = nextMain;
-  if (observedMain) mainObserver.observe(observedMain, { attributes: true, attributeFilter: ["class"] });
-  sync();
-}
-
-function sync() {
-  const started = observedMain?.classList.contains("game-started") ?? false;
-  button.hidden = !started;
-  document.getElementById("game-mode-control")?.toggleAttribute("hidden", started);
-
-  if (!started) {
-    closePopover();
-    return;
-  }
-
-  positionButton();
-  if (!popover.hidden) positionPopover();
-}
-
 function toolbar() {
   return root?.querySelector<HTMLElement>("main.game-started .toolbar") ?? null;
 }
 
-function positionButton() {
-  const firstTool = root?.querySelector<HTMLElement>("main.game-started .started-tools .compact-tool-link");
-  if (!firstTool) {
-    button.style.top = "8px";
-    button.style.right = "8px";
-    button.style.height = "";
-    return;
-  }
-  const bounds = firstTool.getBoundingClientRect();
-  button.style.top = `${bounds.top}px`;
-  button.style.right = `${Math.max(6, window.innerWidth - bounds.left + 6)}px`;
-  button.style.height = `${bounds.height}px`;
-}
-
 function openPopover() {
+  if (!toolbar()) return;
   renderPopover();
   popover.hidden = false;
   button.setAttribute("aria-expanded", "true");
-  positionPopover();
 }
 
 function closePopover() {
   popover.hidden = true;
   button.setAttribute("aria-expanded", "false");
-}
-
-function positionPopover() {
-  if (popover.hidden) return;
-  const bounds = button.getBoundingClientRect();
-  popover.style.top = `${Math.min(window.innerHeight - 12, bounds.bottom + 6)}px`;
-  popover.style.right = `${Math.max(6, window.innerWidth - bounds.right)}px`;
 }
 
 function renderPopover() {
