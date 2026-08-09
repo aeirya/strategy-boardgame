@@ -1,4 +1,4 @@
-.game-started .toolbar.session-toolbar-compact {
+.game-started .toolbar {
   position: sticky;
   z-index: 70;
   top: 0;
@@ -10,20 +10,35 @@
   background: rgba(11, 16, 19, 0.96);
 }
 
-.game-started .toolbar.session-toolbar-compact > label {
+.game-started .toolbar > label {
   display: none !important;
 }
 
-.game-started .toolbar.session-toolbar-compact .started-tools {
+.game-started .toolbar .started-tools {
   margin-left: auto;
   gap: 4px;
 }
 
-.game-started .toolbar.session-toolbar-compact .session-menu-toggle,
-.game-started .toolbar.session-toolbar-compact .compact-tool-link {
+.game-started .toolbar .compact-tool-link,
+.session-menu-toggle-external {
   min-height: 30px;
   padding: 5px 9px;
   font-size: 12px;
+}
+
+.session-menu-toggle-external {
+  position: fixed;
+  z-index: 1201;
+  border: 1px solid rgba(232, 211, 173, 0.28);
+  border-radius: 8px;
+  background: rgba(29, 35, 39, 0.96);
+  color: #f4e7d0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  font-weight: 800;
+}
+
+.session-menu-toggle-external[hidden] {
+  display: none !important;
 }
 
 .session-menu-popover {
@@ -115,7 +130,7 @@
 }
 
 @media (max-width: 560px) {
-  .game-started .toolbar.session-toolbar-compact {
+  .game-started .toolbar {
     padding: 3px 4px;
   }
 
