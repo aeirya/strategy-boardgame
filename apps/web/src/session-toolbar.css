@@ -2,7 +2,7 @@
   position: sticky;
   z-index: 70;
   top: 0;
-  min-height: 0;
+  min-height: 40px;
   justify-content: flex-end;
   gap: 4px;
   margin-bottom: 3px;
@@ -16,30 +16,48 @@
 
 .game-started .toolbar .started-tools {
   margin-left: auto;
+  margin-right: 58px;
   gap: 4px;
 }
 
-.game-started .toolbar .compact-tool-link,
-.session-menu-toggle-external {
+/* compact-tool-link is full-width in side panels; toolbar links must be intrinsic */
+.game-started .toolbar .compact-tool-link {
+  width: auto;
   min-height: 30px;
+  margin-top: 0;
   padding: 5px 9px;
   font-size: 12px;
 }
 
 .session-menu-toggle-external {
   position: fixed;
-  z-index: 1201;
+  z-index: 80;
+  top: 10px;
+  right: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  min-height: 30px;
+  width: auto;
   margin: 0;
+  padding: 5px 9px;
+  background: rgba(29, 35, 39, 0.9);
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 800;
 }
 
-.session-menu-toggle-external[hidden] {
-  display: none !important;
+body:has(main.game-started) .session-menu-toggle-external {
+  display: inline-flex;
 }
 
 .session-menu-popover {
   position: fixed;
-  z-index: 1200;
-  width: min(330px, calc(100vw - 12px));
+  z-index: 81;
+  top: 44px;
+  right: 10px;
+  width: min(330px, calc(100vw - 20px));
   border: 1px solid rgba(232, 211, 173, 0.32);
   border-radius: 10px;
   background: rgba(12, 18, 21, 0.98);
@@ -48,7 +66,8 @@
   padding: 10px;
 }
 
-.session-menu-popover[hidden] {
+.session-menu-popover[hidden],
+body:not(:has(main.game-started)) .session-menu-popover {
   display: none !important;
 }
 
@@ -126,10 +145,23 @@
 
 @media (max-width: 560px) {
   .game-started .toolbar {
+    min-height: 38px;
     padding: 3px 4px;
   }
 
+  .game-started .toolbar .started-tools {
+    margin-right: 54px;
+  }
+
+  .session-menu-toggle-external {
+    top: 8px;
+    right: 8px;
+    min-width: 48px;
+  }
+
   .session-menu-popover {
+    top: 42px;
+    right: 4px;
     width: min(300px, calc(100vw - 8px));
   }
 }
