@@ -4,7 +4,9 @@ type BoardViewMode = "explore" | "fit";
 
 const storageKey = "tabletop-board-view-mode";
 const originalViewBoxes = new WeakMap<SVGSVGElement, string>();
-let mode: BoardViewMode = window.localStorage.getItem(storageKey) === "fit" ? "fit" : "explore";
+const installedLandscape = window.matchMedia("(display-mode: standalone) and (orientation: landscape)");
+const savedMode = window.localStorage.getItem(storageKey);
+let mode: BoardViewMode = savedMode === "fit" || (!savedMode && installedLandscape.matches) ? "fit" : "explore";
 let fitFrame = 0;
 
 const toggle = document.querySelector<HTMLButtonElement>("#board-view-toggle");
@@ -141,6 +143,13 @@ window.addEventListener("pointerdown", (event) => {
 
 window.addEventListener("resize", () => {
   if (mode === "fit") applyMode();
+});
+
+installedLandscape.addEventListener("change", (event) => {
+  if (!window.localStorage.getItem(storageKey) && event.matches) {
+    mode = "fit";
+    applyMode();
+  }
 });
 
 const observer = new MutationObserver(() => applyMode());

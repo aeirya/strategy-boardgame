@@ -1,0 +1,325 @@
+#pwa-orientation-hint {
+  display: none;
+}
+
+@media (display-mode: standalone) {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+
+  .board-view-toggle {
+    right: max(6px, env(safe-area-inset-right));
+    bottom: max(6px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (display-mode: standalone) and (orientation: portrait) and (max-width: 600px) {
+  #pwa-orientation-hint {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 8px;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(212, 164, 75, 0.16), transparent 32%),
+      #0b1013;
+    padding:
+      max(24px, env(safe-area-inset-top))
+      max(24px, env(safe-area-inset-right))
+      max(24px, env(safe-area-inset-bottom))
+      max(24px, env(safe-area-inset-left));
+    color: #f4e7d0;
+    text-align: center;
+  }
+
+  #pwa-orientation-hint::before {
+    content: "↻";
+    color: #d4a44b;
+    font-size: 54px;
+    line-height: 1;
+  }
+
+  #pwa-orientation-hint strong {
+    font-size: 22px;
+  }
+
+  #pwa-orientation-hint span {
+    color: #bba88e;
+    font-size: 13px;
+  }
+}
+
+/* Installed iPhones have plenty of width in landscape but very little height.
+ * Keep the board and command rail side-by-side and spend vertical space on the
+ * map rather than reproducing the normal narrow-browser stacked layout. */
+@media (display-mode: standalone) and (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100%;
+    overscroll-behavior: none;
+  }
+
+  main:not(.game-started) {
+    min-height: 100dvh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    padding:
+      max(3px, env(safe-area-inset-top))
+      max(6px, env(safe-area-inset-right))
+      max(58px, env(safe-area-inset-bottom))
+      max(6px, env(safe-area-inset-left));
+  }
+
+  main:not(.game-started) .hero {
+    min-height: 0;
+    margin-bottom: 4px;
+    padding: 8px;
+  }
+
+  main:not(.game-started) .hero h1 {
+    font-size: 28px;
+  }
+
+  main:not(.game-started) .subtitle {
+    display: none;
+  }
+
+  main:not(.game-started) .toolbar {
+    gap: 6px;
+    margin-bottom: 4px;
+    padding: 7px;
+  }
+
+  .game-mode-control {
+    left: max(6px, env(safe-area-inset-left));
+    bottom: max(6px, env(safe-area-inset-bottom));
+    max-width: min(280px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 12px));
+    padding: 5px 7px;
+  }
+
+  .game-mode-control small {
+    display: none;
+  }
+
+  main.game-started {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 3px;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    padding:
+      max(2px, env(safe-area-inset-top))
+      max(3px, env(safe-area-inset-right))
+      max(2px, env(safe-area-inset-bottom))
+      max(3px, env(safe-area-inset-left));
+  }
+
+  .game-topbar {
+    --game-topbar-control-height: 27px;
+    position: relative;
+    top: auto;
+    min-height: 33px;
+    margin: 0;
+    gap: 5px;
+    border-radius: 6px;
+    padding: 3px 5px;
+  }
+
+  .game-topbar-status {
+    gap: 3px;
+  }
+
+  .game-topbar-stat {
+    gap: 3px;
+    padding-inline: 5px;
+  }
+
+  .game-topbar-stat span {
+    font-size: 8px;
+  }
+
+  .game-topbar-stat strong {
+    font-size: 10px;
+  }
+
+  .game-topbar-actions {
+    gap: 3px;
+  }
+
+  .game-topbar-actions > a.game-topbar-action {
+    display: none;
+  }
+
+  .game-topbar-action {
+    min-height: 27px;
+    padding-inline: 8px;
+    font-size: 10px;
+  }
+
+  .session-menu-popover {
+    max-height: calc(100dvh - 42px);
+    overflow-y: auto;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(196px, 24vw, 224px);
+    align-items: stretch;
+    gap: 4px;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .war-table,
+  .board-engine {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .map-svg {
+    width: 100%;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .side-panel {
+    position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    width: 100%;
+    min-width: 0;
+    max-height: 100%;
+    gap: 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 1px;
+  }
+
+  .side-panel .panel,
+  .side-panel .action-card {
+    padding: 7px;
+  }
+
+  .side-panel .panel-heading {
+    gap: 1px;
+    margin-bottom: 5px;
+  }
+
+  .side-panel .panel-heading h2 {
+    font-size: 14px;
+  }
+
+  .side-panel .eyebrow {
+    font-size: 8px;
+  }
+
+  .side-panel .action-card,
+  .side-panel .stack {
+    gap: 6px;
+  }
+
+  .side-panel .command-hint {
+    border-left-width: 3px;
+    padding: 6px 7px;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .side-panel button {
+    min-height: 33px;
+    padding: 6px 8px;
+    box-shadow: none;
+    font-size: 11px;
+  }
+
+  .side-panel .hint {
+    font-size: 10px;
+  }
+
+  .board-topbar {
+    top: 4px !important;
+    right: 4px !important;
+    left: 4px !important;
+  }
+
+  .map-controls button {
+    min-width: 28px;
+    min-height: 28px;
+    padding: 4px 6px;
+  }
+
+  /* Fit mode is the useful default on an iPhone. Keep its order tray as a
+     shallow bottom row so it remains touchable without stealing board width. */
+  .fit-board-view .board-engine {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .fit-board-view .map-svg {
+    grid-row: 1;
+    height: 100% !important;
+    max-height: none !important;
+    aspect-ratio: auto;
+  }
+
+  .fit-board-view .order-tray {
+    grid-row: 2;
+    min-height: 46px;
+    max-height: 52px;
+    gap: 5px;
+    padding: 3px 6px;
+  }
+
+  .fit-board-view .order-tray .tray-heading {
+    flex-basis: 72px;
+    gap: 1px;
+  }
+
+  .fit-board-view .order-tray .tray-heading .eyebrow {
+    display: none;
+  }
+
+  .fit-board-view .order-tray .tray-heading strong {
+    font-size: 9px;
+  }
+
+  .fit-board-view .order-tray .special-meter {
+    display: none;
+  }
+
+  .fit-board-view .order-tray .tray-group {
+    flex-basis: 92px;
+  }
+
+  .fit-board-view .order-tray .tray-group-label {
+    font-size: 8px;
+  }
+
+  .fit-board-view .order-tray .tray-token {
+    min-height: 36px;
+    padding-block: 2px;
+  }
+
+  .board-view-toggle {
+    min-height: 30px;
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+}
