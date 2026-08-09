@@ -5,7 +5,26 @@ on:
   pull_request:
 
 jobs:
-  test:
+  test-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm build
+
+  test-push:
+    if: github.event_name == 'push'
     runs-on: [self-hosted, kmanweb, pages]
     steps:
       - uses: actions/checkout@v6
